@@ -2,6 +2,7 @@ package com.greenpalmsolutions.security.artifacts.internal;
 
 import com.greenpalmsolutions.security.accounts.api.behavior.FindCurrentAccount;
 import com.greenpalmsolutions.security.artifacts.api.behavior.CreateArtifact;
+import com.greenpalmsolutions.security.artifacts.api.behavior.FindArtifacts;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifact;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifacts;
 import com.greenpalmsolutions.security.artifacts.api.model.*;
@@ -11,9 +12,12 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
-class ArtifactService implements CreateArtifact, ValidateArtifact, ValidateArtifacts {
+class ArtifactService implements CreateArtifact, FindArtifacts, ValidateArtifact, ValidateArtifacts {
 
     private final ArtifactRepository artifactRepository;
     private final FindCurrentAccount findCurrentAccount;
@@ -27,6 +31,14 @@ class ArtifactService implements CreateArtifact, ValidateArtifact, ValidateArtif
         return artifactRepository.save(new Artifact()
                 .mapFromCreateArtifactRequestAndUserId(request, findCurrentAccount.getUserIdForCurrentAccount()))
                 .getAsCreateArtifactResponse();
+    }
+
+    @Override
+    public List<ArtifactDetails> findArtifacts() {
+        return artifactRepository.findByUserId(findCurrentAccount.getUserIdForCurrentAccount())
+                .stream()
+                .map(Artifact::getDetails)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.greenpalmsolutions.security.artifacts.internal;
 
+import com.greenpalmsolutions.security.artifacts.api.model.ArtifactDetails;
 import com.greenpalmsolutions.security.artifacts.api.model.CreateArtifactRequest;
 import com.greenpalmsolutions.security.artifacts.api.model.CreateArtifactResponse;
 import com.greenpalmsolutions.security.artifacts.api.model.ValidateArtifactRequest;
@@ -52,6 +53,10 @@ public class Artifact {
 
     CreateArtifactResponse getAsCreateArtifactResponse() {
         return new CreateArtifactResponse(id, name, filePath);
+    }
+
+    ArtifactDetails getDetails() {
+        return new ArtifactDetails(id, name, filePath);
     }
 
     boolean isValidWithinRequest(ValidateArtifactRequest request) {

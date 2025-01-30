@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,4 +24,6 @@ interface ArtifactRepository extends JpaRepository<Artifact, Long> {
     boolean artifactIsModifiedWithFilePathAndUserIdAndHash(@Param("filePath") String filePath,
                                                            @Param("userId") String userId,
                                                            @Param("hash") byte[] hash);
+
+    List<Artifact> findByUserId(String userId);
 }

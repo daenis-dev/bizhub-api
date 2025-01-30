@@ -1,6 +1,7 @@
 package com.greenpalmsolutions.security.artifacts.api.controller;
 
 import com.greenpalmsolutions.security.artifacts.api.behavior.CreateArtifact;
+import com.greenpalmsolutions.security.artifacts.api.behavior.FindArtifacts;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifact;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifacts;
 import com.greenpalmsolutions.security.artifacts.api.model.*;
@@ -9,11 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ArtifactController {
 
     private final CreateArtifact createArtifact;
+    private final FindArtifacts findArtifacts;
     private final ValidateArtifact validateArtifact;
     private final ValidateArtifacts validateArtifacts;
 
@@ -29,7 +33,12 @@ public class ArtifactController {
                         .withHash(hash)), HttpStatus.CREATED);
     }
 
-    @GetMapping("/v1/artifacts/{id}")
+    @GetMapping("/v1/artifacts")
+    public ResponseEntity<List<ArtifactDetails>> findArtifacts() {
+        return new ResponseEntity<>(findArtifacts.findArtifacts(), HttpStatus.OK);
+    }
+
+    @GetMapping("/v1/artifacts/{id}/validate")
     public ResponseEntity<ValidateArtifactResponse> validateArtifact(
             @PathVariable("id") String id,
             @RequestParam("hash") String hash) {
@@ -39,7 +48,7 @@ public class ArtifactController {
                         .withHash(hash)), HttpStatus.OK);
     }
 
-    @GetMapping("/v1/artifacts")
+    @GetMapping("/v1/artifacts/validate")
     public ResponseEntity<ValidateArtifactsResponse> validateArtifacts(
             @RequestParam("artifact-hashes") String artifactHashes) {
         return new ResponseEntity<>(validateArtifacts.validateArtifactsForRequest(

@@ -1,8 +1,10 @@
 package com.greenpalmsolutions.security.artifacts.api.controller;
 
 import com.greenpalmsolutions.security.artifacts.api.behavior.CreateArtifact;
+import com.greenpalmsolutions.security.artifacts.api.behavior.FindArtifacts;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifact;
 import com.greenpalmsolutions.security.artifacts.api.behavior.ValidateArtifacts;
+import com.greenpalmsolutions.security.artifacts.api.model.ArtifactDetails;
 import com.greenpalmsolutions.security.artifacts.api.model.CreateArtifactResponse;
 import com.greenpalmsolutions.security.artifacts.api.model.ValidateArtifactResponse;
 import com.greenpalmsolutions.security.artifacts.api.model.ValidateArtifactsResponse;
@@ -31,6 +33,9 @@ class ArtifactControllerTest {
     private CreateArtifact createArtifact;
 
     @Mock
+    private FindArtifacts findArtifacts;
+
+    @Mock
     private ValidateArtifact validateArtifact;
 
     @Mock
@@ -41,7 +46,7 @@ class ArtifactControllerTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new ArtifactController(createArtifact, validateArtifact, validateArtifacts))
+                .standaloneSetup(new ArtifactController(createArtifact, findArtifacts, validateArtifact, validateArtifacts))
                 .build();
     }
 
@@ -65,13 +70,24 @@ class ArtifactControllerTest {
     }
 
     @Test
+    void findsTheArtifacts() throws Exception {
+        ArtifactDetails details = new ArtifactDetails(1, "File 1", "C:/Users/me/file.txt");
+
+        when(findArtifacts.findArtifacts()).thenReturn(Collections.singletonList(details));
+
+        mockMvc.perform(get("/v1/artifacts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)));
+    }
+
+    @Test
     void validatesTheArtifact() throws Exception {
         final String MESSAGE = "Artifact is no longer valid; hash has been updated";
         ValidateArtifactResponse response = new ValidateArtifactResponse(false);
 
         when(validateArtifact.validateArtifactForRequest(any())).thenReturn(response);
 
-        mockMvc.perform(get("/v1/artifacts/1")
+        mockMvc.perform(get("/v1/artifacts/1/validate")
                         .param("hash", "4aebd3d8e8f4f63a1e90cd4fa275f9abf7d8c682bd8f95cd74c5a9b29f9e53f1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.valid", is(false)))
@@ -86,7 +102,7 @@ class ArtifactControllerTest {
 
         when(validateArtifacts.validateArtifactsForRequest(any())).thenReturn(response);
 
-        mockMvc.perform(get("/v1/artifacts")
+        mockMvc.perform(get("/v1/artifacts/validate")
                         .param("artifact-hashes", modifiedFilePath + ":" + "7f89ds7f89ds798f"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.corruptArtifactFilePaths[0]", is(modifiedFilePath)));
