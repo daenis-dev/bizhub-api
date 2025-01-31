@@ -1,6 +1,6 @@
 package com.greenpalmsolutions.security.commontargetfiles.internal;
 
-import com.greenpalmsolutions.security.commontargetfiles.api.FindCommonTargetFilePaths;
+import com.greenpalmsolutions.security.commontargetfiles.api.behavior.FindCommonTargetFilePaths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

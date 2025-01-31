@@ -1,7 +1,6 @@
-package com.greenpalmsolutions.security.commontargetfiles.api;
+package com.greenpalmsolutions.security.commontargetfiles.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.entity.ContentType;
+import com.greenpalmsolutions.security.commontargetfiles.api.behavior.FindCommonTargetFilePaths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

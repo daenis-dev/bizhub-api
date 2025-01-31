@@ -1,6 +1,6 @@
 package it.commontargetfiles;
 
-import com.greenpalmsolutions.security.commontargetfiles.api.FindCommonTargetFilePaths;
+import com.greenpalmsolutions.security.commontargetfiles.api.behavior.FindCommonTargetFilePaths;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

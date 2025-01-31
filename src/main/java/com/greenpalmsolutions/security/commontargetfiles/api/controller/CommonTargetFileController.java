@@ -1,5 +1,6 @@
-package com.greenpalmsolutions.security.commontargetfiles.api;
+package com.greenpalmsolutions.security.commontargetfiles.api.controller;
 
+import com.greenpalmsolutions.security.commontargetfiles.api.behavior.FindCommonTargetFilePaths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
