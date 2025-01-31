@@ -1,0 +1,30 @@
+package com.greenpalmsolutions.security.backups.internal;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "backups")
+@Getter(value = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@EqualsAndHashCode
+class Backup {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "backups_seq")
+    @SequenceGenerator(name = "backups_seq", sequenceName = "backups_id_seq", allocationSize = 1)
+    private long id;
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "user_id")
+    private String userId;
+
+    @Column(name = "is_compressed")
+    private boolean isCompressed;
+}
