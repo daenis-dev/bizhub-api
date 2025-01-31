@@ -23,7 +23,7 @@ public class ArtifactController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/v1/artifacts/validate")
+    @PostMapping("/v1/artifacts/validate")
     public ResponseEntity<ValidateArtifactsResponse> validateArtifacts(
             @RequestBody List<ArtifactRequest> requests) {
         return new ResponseEntity<>(validateArtifacts.validateArtifactsForRequests(requests), HttpStatus.OK);

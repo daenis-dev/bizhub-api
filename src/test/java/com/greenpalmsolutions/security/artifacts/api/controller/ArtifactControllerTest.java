@@ -67,7 +67,7 @@ class ArtifactControllerTest {
 
         when(validateArtifacts.validateArtifactsForRequests(any())).thenReturn(response);
 
-        mockMvc.perform(get("/v1/artifacts/validate")
+        mockMvc.perform(post("/v1/artifacts/validate")
                         .contentType(ContentType.APPLICATION_JSON.toString())
                         .content(new ObjectMapper().writeValueAsString(Collections.singletonList(request))))
                 .andExpect(status().isOk())
