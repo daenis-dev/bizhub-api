@@ -5,7 +5,7 @@ import com.greenpalmsolutions.security.backups.api.behavior.FindBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
 import com.greenpalmsolutions.security.backups.api.model.CreateBackupsResponse;
 import com.greenpalmsolutions.security.backups.api.model.BackupRequest;
-import com.greenpalmsolutions.security.backups.api.behavior.CreateBackup;
+import com.greenpalmsolutions.security.backups.api.behavior.CreateBackups;
 import com.greenpalmsolutions.security.backups.api.model.BackupRequests;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 // TODO: IT
 @Service
 @RequiredArgsConstructor
-class BackupService implements CreateBackup, FindBackup {
+class BackupsService implements CreateBackups, FindBackup {
 
     private final BackupRepository backupRepository;
     private final FindCurrentAccount findCurrentAccount;
