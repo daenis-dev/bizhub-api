@@ -24,6 +24,4 @@ interface ArtifactRepository extends JpaRepository<Artifact, Long> {
     boolean artifactIsModifiedWithFilePathAndUserIdAndHash(@Param("filePath") String filePath,
                                                            @Param("userId") String userId,
                                                            @Param("hash") byte[] hash);
-
-    List<Artifact> findByUserId(String userId);
 }

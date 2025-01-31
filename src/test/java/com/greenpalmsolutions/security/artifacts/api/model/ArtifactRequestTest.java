@@ -7,54 +7,22 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateArtifactRequestTest {
+class ArtifactRequestTest {
 
-    private CreateArtifactRequest createArtifactRequest;
+    private ArtifactRequest artifactRequest;
 
     @BeforeEach
     void init() {
-        createArtifactRequest = new CreateArtifactRequest();
-    }
-
-    @Test
-    void setsNameForValidInput() {
-        String theName = "Windows Kernel";
-
-        CreateArtifactRequest theUpdatedRequest = createArtifactRequest.withName(theName);
-
-        String theNameFromTheUpdatedRequest = theUpdatedRequest.getName();
-        assertThat(theNameFromTheUpdatedRequest).isEqualTo(theName);
-    }
-
-    @Test
-    void doesNotSetTheNameForNullInput() {
-        String thePredictedMessage = "Name is required to create an artifact";
-
-        InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withName(null));
-
-        String theMessageFromTheException = theException.getMessage();
-        assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
-    }
-
-    @Test
-    void doesNotSetTheNameForEmptyInput() {
-        String thePredictedMessage = "Name is required to create an artifact";
-
-        InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withName(""));
-
-        String theMessageFromTheException = theException.getMessage();
-        assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
+        artifactRequest = new ArtifactRequest();
     }
 
     @Test
     void setsFilePathForValidInput() {
         String theFilePath = "C:\\Windows\\System32\\ntoskrnl.exe";
 
-        CreateArtifactRequest theUpdatedRequest = createArtifactRequest.withFilePath(theFilePath);
+        artifactRequest.setFilePath(theFilePath);
 
-        String theFilePathFromTheUpdatedRequest = theUpdatedRequest.getFilePath();
+        String theFilePathFromTheUpdatedRequest = artifactRequest.getFilePath();
         assertThat(theFilePathFromTheUpdatedRequest).isEqualTo(theFilePath);
     }
 
@@ -63,7 +31,7 @@ class CreateArtifactRequestTest {
         String thePredictedMessage = "File path is required to create an artifact";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withFilePath(null));
+                () -> artifactRequest.setFilePath(null));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
@@ -74,7 +42,7 @@ class CreateArtifactRequestTest {
         String thePredictedMessage = "File path is required to create an artifact";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withFilePath(""));
+                () -> artifactRequest.setFilePath(""));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
@@ -84,9 +52,9 @@ class CreateArtifactRequestTest {
     void setsHashForValidInput() {
         String theHash = "4aebd3d8e8f4f63a1e90cd4fa275f9abf7d8c682bd8f95cd74c5a9b29f9e53f1";
 
-        CreateArtifactRequest theUpdatedRequest = createArtifactRequest.withHash(theHash);
+        artifactRequest.setHash(theHash);
 
-        String theHashFromTheUpdatedRequest = theUpdatedRequest.getHash();
+        String theHashFromTheUpdatedRequest = artifactRequest.getHash();
         assertThat(theHashFromTheUpdatedRequest).isEqualTo(theHash);
     }
 
@@ -95,7 +63,7 @@ class CreateArtifactRequestTest {
         String thePredictedMessage = "Hash is required to create an artifact";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withHash(null));
+                () -> artifactRequest.setHash(null));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
@@ -106,7 +74,7 @@ class CreateArtifactRequestTest {
         String thePredictedMessage = "Hash is required to create an artifact";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> createArtifactRequest.withHash(""));
+                () -> artifactRequest.setHash(""));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);

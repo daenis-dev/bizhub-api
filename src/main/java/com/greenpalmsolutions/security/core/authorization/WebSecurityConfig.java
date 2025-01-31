@@ -38,7 +38,6 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/logout").hasRole(USER)
                             .requestMatchers(HttpMethod.POST, "/v1/artifacts").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/artifacts/**").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/artifacts").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {
@@ -47,7 +46,6 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/logout");
                             configurer.ignoringRequestMatchers("/v1/reset-password");
                             configurer.ignoringRequestMatchers("/v1/artifacts");
-                            configurer.ignoringRequestMatchers("/v1/artifacts/**");
                 })
                 .oauth2ResourceServer(resourceServer -> {
                     resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter));
