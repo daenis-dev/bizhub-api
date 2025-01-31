@@ -36,9 +36,8 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/reset-password").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/logout").hasRole(USER)
-                            .requestMatchers(HttpMethod.POST, "/v1/artifacts").hasRole(USER)
-                            .requestMatchers(HttpMethod.POST, "/v1/artifacts/**").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/common-target-file-paths/**").hasRole(USER)
+                            .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/backups").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {
@@ -46,8 +45,7 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/login");
                             configurer.ignoringRequestMatchers("/v1/logout");
                             configurer.ignoringRequestMatchers("/v1/reset-password");
-                            configurer.ignoringRequestMatchers("/v1/artifacts");
-                            configurer.ignoringRequestMatchers("/v1/artifacts/**");
+                            configurer.ignoringRequestMatchers("/v1/backups");
                 })
                 .oauth2ResourceServer(resourceServer -> {
                     resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter));
