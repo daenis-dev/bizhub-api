@@ -22,9 +22,17 @@ class Backup {
     @Column(name = "file_path")
     private String filePath;
 
+    @Column(name = "file_extension")
+    private String fileExtension;
+
     @Column(name = "user_id")
     private String userId;
 
     @Column(name = "is_compressed")
     private boolean isCompressed;
+
+    public String getOriginalFileName() {
+        return filePath.replaceAll(".*/", "").replaceAll("\\.[^.]+$", "")
+                + '.' + fileExtension;
+    }
 }
