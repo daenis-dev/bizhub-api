@@ -28,7 +28,7 @@ class UploadBackupRequestTest {
 
     @Test
     void doesNotSetTheFileNameForNullInput() {
-        String thePredictedMessage = "File path is required to create backup";
+        String thePredictedMessage = "File name is required to create backup";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
                 () -> uploadBackupRequest.withFileName(null));
@@ -39,7 +39,7 @@ class UploadBackupRequestTest {
 
     @Test
     void doesNotSetTheFileNameForEmptyInput() {
-        String thePredictedMessage = "File path is required to create backup";
+        String thePredictedMessage = "File name is required to create backup";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
                 () -> uploadBackupRequest.withFileName(""));
@@ -78,5 +78,52 @@ class UploadBackupRequestTest {
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
+    }
+
+    @Test
+    void getsTheContentLengthInBytes() {
+        uploadBackupRequest.withFileContents("Hello".getBytes());
+        int thePredictedContentLengthInBytes = "Hello".getBytes().length;
+
+        int theContentLengthInBytes = uploadBackupRequest.getContentLengthInBytes();
+
+
+        assertThat(theContentLengthInBytes).isEqualTo(thePredictedContentLengthInBytes);
+    }
+
+    @Test
+    void getsTheFileExtension() {
+        uploadBackupRequest.withFileName("something.txt");
+
+        String theFileExtension = uploadBackupRequest.getFileExtension();
+
+        assertThat(theFileExtension).isEqualTo("txt");
+    }
+
+    @Test
+    void getsABlankStringIfThereIsNoFileExtension() {
+        uploadBackupRequest.withFileName("/some/directory");
+
+        String theFileExtension = uploadBackupRequest.getFileExtension();
+
+        assertThat(theFileExtension).isBlank();
+    }
+
+    @Test
+    void getsTheFileNameWithoutTheExtension() {
+        uploadBackupRequest.withFileName("something.txt");
+
+        String theFileNameWithoutTheExtension = uploadBackupRequest.getFileNameWithoutExtension();
+
+        assertThat(theFileNameWithoutTheExtension).isEqualTo("something");
+    }
+
+    @Test
+    void returnsTheFileNameIfThereIsNoFileExtension() {
+        uploadBackupRequest.withFileName("no-name-file");
+
+        String theFileNameWithoutTheExtension = uploadBackupRequest.getFileNameWithoutExtension();
+
+        assertThat(theFileNameWithoutTheExtension).isEqualTo("no-name-file");
     }
 }

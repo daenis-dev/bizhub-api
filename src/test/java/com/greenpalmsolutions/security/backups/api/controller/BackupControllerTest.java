@@ -62,7 +62,7 @@ class BackupControllerTest {
         when(downloadBackup.downloadForRequest(any())).thenReturn(theDetails);
 
         mockMvc.perform(get("/v1/backups")
-                        .param("file-path", "/something/someone.txt"))
+                        .param("file-name", "someone.txt"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition", "attachment; filename=someone.txt"))
                 .andExpect(content().bytes("data".getBytes()));

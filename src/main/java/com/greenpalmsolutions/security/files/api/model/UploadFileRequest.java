@@ -3,12 +3,11 @@ package com.greenpalmsolutions.security.files.api.model;
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import lombok.Getter;
 
-// TODO: test
 @Getter
 public class UploadFileRequest {
 
-    private byte[] fileContents;
     private String filePath;
+    private byte[] fileContents;
 
     public UploadFileRequest withFilePath(String filePath) {
         if (filePath == null || filePath.isEmpty()) {

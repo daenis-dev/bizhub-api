@@ -28,9 +28,6 @@ class Backup {
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "is_compressed")
-    private boolean isCompressed;
-
     public String getOriginalFileName() {
         return getFileNameWithoutExtension(getFileNameFromFullPath(filePath))
                 + '.' + fileExtension;

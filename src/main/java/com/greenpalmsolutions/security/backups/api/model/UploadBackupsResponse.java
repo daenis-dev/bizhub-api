@@ -3,7 +3,6 @@ package com.greenpalmsolutions.security.backups.api.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-// TODO: test (check name verbiage)
 @Getter
 @RequiredArgsConstructor
 public class UploadBackupsResponse {

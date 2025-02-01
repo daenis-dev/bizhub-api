@@ -9,12 +9,16 @@ import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 // TODO: IT
 @Service
 @RequiredArgsConstructor
 class BackupService implements UploadBackups, DownloadBackup {
+
+    @Value("${app.file-storage.local.location}")
+    private String FILE_STORAGE_LOCATION;
 
     private final BackupRepository backupRepository;
     private final UploadFile uploadFile;
@@ -25,7 +29,7 @@ class BackupService implements UploadBackups, DownloadBackup {
     @Override
     public UploadBackupsResponse uploadBackupsForRequest(UploadBackupsRequest requests) {
         long totalBytes = 0;
-        final String DIRECTORY_PATH = "/src/main/resources/storage/"
+        final String DIRECTORY_PATH = FILE_STORAGE_LOCATION + '/'
                 + findCurrentAccount.getUserIdForCurrentAccount();
         for (UploadBackupRequest request : requests.getUploadBackupRequests()) {
             if (totalBytes + request.getContentLengthInBytes() > 10000000000L) {
@@ -49,14 +53,13 @@ class BackupService implements UploadBackups, DownloadBackup {
         Backup backup = new Backup();
         backup.setFilePath(filePath);
         backup.setFileExtension(fileExtension);
-        backup.setCompressed(true);
         backup.setUserId(findCurrentAccount.getUserIdForCurrentAccount());
         backupRepository.save(backup);
     }
 
     @Override
     public BackupDetails downloadForRequest(DownloadBackupRequest request) {
-        final String FILE_PATH = "/src/main/resources/storage/"
+        final String FILE_PATH = FILE_STORAGE_LOCATION + '/'
                 + findCurrentAccount.getUserIdForCurrentAccount() + '/'
                 + request.getFileNameWithoutExtension() + ".zip";
 

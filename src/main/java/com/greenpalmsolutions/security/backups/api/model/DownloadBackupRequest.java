@@ -1,15 +1,17 @@
 package com.greenpalmsolutions.security.backups.api.model;
 
+import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import lombok.Getter;
 
-// TODO: test
 @Getter
 public class DownloadBackupRequest {
 
     private String fileName;
 
     public DownloadBackupRequest withFileName(String fileName) {
-        // TODO: validation
+        if (fileName == null || fileName.isEmpty()) {
+            throw new InvalidRequestException("File name is required to download backup");
+        }
         this.fileName = fileName;
         return this;
     }

@@ -13,7 +13,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-// TODO: IT
 @Service
 class FileService implements DownloadFile, UploadFile {
 

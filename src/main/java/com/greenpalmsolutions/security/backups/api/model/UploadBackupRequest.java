@@ -3,7 +3,6 @@ package com.greenpalmsolutions.security.backups.api.model;
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import lombok.Getter;
 
-// TODO: test
 @Getter
 public class UploadBackupRequest {
 

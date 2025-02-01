@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: test
 @Getter
 public class UploadBackupsRequest {
 
