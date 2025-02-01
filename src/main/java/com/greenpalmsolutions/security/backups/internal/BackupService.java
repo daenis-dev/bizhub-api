@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-// TODO: IT
 @Service
 @RequiredArgsConstructor
 class BackupService implements UploadBackups, DownloadBackup {
@@ -39,6 +38,7 @@ class BackupService implements UploadBackups, DownloadBackup {
             final String FILE_PATH = DIRECTORY_PATH + '/' + request.getFileNameWithoutExtension() + ".zip";
             createBackupFileFor(FILE_PATH, request.getFileContents());
             createBackupRecordFor(FILE_PATH, request.getFileExtension());
+            totalBytes += request.getContentLengthInBytes();
         }
         return new UploadBackupsResponse(totalBytes);
     }
@@ -59,18 +59,21 @@ class BackupService implements UploadBackups, DownloadBackup {
 
     @Override
     public BackupDetails downloadForRequest(DownloadBackupRequest request) {
+        final String USER_ID = findCurrentAccount.getUserIdForCurrentAccount();
         final String FILE_PATH = FILE_STORAGE_LOCATION + '/'
-                + findCurrentAccount.getUserIdForCurrentAccount() + '/'
+                + USER_ID + '/'
                 + request.getFileNameWithoutExtension() + ".zip";
 
-        Backup backup = findBackupForFilePath(FILE_PATH);
+        Backup backup = findBackupForFilePath(FILE_PATH, USER_ID);
 
         return new BackupDetails(
                 backup.getOriginalFileName(),
                 downloadFile.downloadFileWithFilePath(backup.getFilePath()));
     }
 
-    private Backup findBackupForFilePath(String filePath) {
+    private Backup findBackupForFilePath(String filePath, String userId) {
+        System.out.println("Filepath: " + filePath);
+        System.out.println("User ID: " + userId);
         return backupRepository.findByFilePathAndUserId(filePath, findCurrentAccount.getUserIdForCurrentAccount())
                 .orElseThrow(() -> new RuntimeException("An error occurred while retrieving the backup"));
     }

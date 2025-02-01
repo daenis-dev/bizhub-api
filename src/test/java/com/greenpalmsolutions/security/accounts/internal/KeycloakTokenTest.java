@@ -1,7 +1,5 @@
 package com.greenpalmsolutions.security.accounts.internal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.greenpalmsolutions.security.accounts.api.model.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -58,7 +58,7 @@ class FileService implements DownloadFile, UploadFile {
                 }
             }
         } catch (IOException ex) {
-            throw new RuntimeException("Error while retrieving backup", ex);
+            throw new RuntimeException("Error while downloading file", ex);
         }
     }
 }

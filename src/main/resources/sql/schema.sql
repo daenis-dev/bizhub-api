@@ -7,6 +7,4 @@ CREATE TABLE backups (
     user_id VARCHAR(255) NOT NULL
 );
 
-INSERT INTO artifacts (name, file_name, hash, user_id) VALUES ('src/main/resources/svchost.zip', '.exe', '123-abc');
-INSERT INTO artifacts (name, file_path, hash, user_id) VALUES ('src/main/resources/lsass.zip', '.exe', '123-abc');
-INSERT INTO artifacts (name, file_path, hash, user_id) VALUES ('src/main/resources/netsh.zip', '.exe', '123-abc');
+INSERT INTO backups (file_path, file_extension, user_id) VALUES ('src/test/resources/storage/123-abc/test.zip', 'txt', '123-abc');
