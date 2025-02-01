@@ -9,14 +9,16 @@ import java.util.List;
 
 // TODO: test
 @Getter
-public class BackupRequests {
+public class UploadBackupsRequest {
 
-    private final List<BackupRequest> backupRequests = new ArrayList<>();
+    private final List<UploadBackupRequest> uploadBackupRequests = new ArrayList<>();
 
-    public BackupRequests addFromFiles(MultipartFile[] files) {
+    public UploadBackupsRequest addFromFiles(MultipartFile[] files) {
         for (MultipartFile file : files) {
             try {
-                backupRequests.add(new BackupRequest().withFileName(file.getOriginalFilename()).withFileContents(file.getBytes()));
+                uploadBackupRequests.add(new UploadBackupRequest()
+                        .withFileName(file.getOriginalFilename())
+                        .withFileContents(file.getBytes()));
             } catch (IOException ex) {
                 throw new RuntimeException("An error occurred while backing up the file", ex);
             }

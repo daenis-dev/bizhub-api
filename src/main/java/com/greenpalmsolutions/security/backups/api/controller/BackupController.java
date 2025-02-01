@@ -1,10 +1,11 @@
 package com.greenpalmsolutions.security.backups.api.controller;
 
-import com.greenpalmsolutions.security.backups.api.behavior.CreateBackups;
-import com.greenpalmsolutions.security.backups.api.behavior.FindBackup;
+import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
+import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
-import com.greenpalmsolutions.security.backups.api.model.CreateBackupsResponse;
-import com.greenpalmsolutions.security.backups.api.model.BackupRequests;
+import com.greenpalmsolutions.security.backups.api.model.DownloadBackupRequest;
+import com.greenpalmsolutions.security.backups.api.model.UploadBackupsResponse;
+import com.greenpalmsolutions.security.backups.api.model.UploadBackupsRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,18 +21,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class BackupController {
 
-    private final CreateBackups createBackups;
-    private final FindBackup findBackup;
+    private final UploadBackups uploadBackups;
+    private final DownloadBackup downloadBackup;
 
     @PostMapping("/v1/backups")
-    public ResponseEntity<CreateBackupsResponse> createBackupsFromFiles(@RequestParam("files") MultipartFile[] files) {
-        return new ResponseEntity<>(createBackups.createBackupForRequests(new BackupRequests().addFromFiles(files)),
+    public ResponseEntity<UploadBackupsResponse> createBackupsFromFiles(@RequestParam("files") MultipartFile[] files) {
+        return new ResponseEntity<>(uploadBackups.uploadBackupsForRequest(new UploadBackupsRequest().addFromFiles(files)),
                 HttpStatus.CREATED);
     }
 
     @GetMapping("/v1/backups")
-    public ResponseEntity<byte[]> downloadBackup(@RequestParam("file-path") String filePath) {
-        BackupDetails backupDetails = findBackup.findBackupForFile(filePath);
+    public ResponseEntity<byte[]> downloadBackup(@RequestParam("file-name") String fileName) {
+        BackupDetails backupDetails = downloadBackup.downloadForRequest(new DownloadBackupRequest().withFileName(fileName));
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=" + backupDetails.getFileName());
 

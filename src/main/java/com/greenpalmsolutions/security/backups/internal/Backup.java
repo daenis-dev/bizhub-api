@@ -32,7 +32,15 @@ class Backup {
     private boolean isCompressed;
 
     public String getOriginalFileName() {
-        return filePath.replaceAll(".*/", "").replaceAll("\\.[^.]+$", "")
+        return getFileNameWithoutExtension(getFileNameFromFullPath(filePath))
                 + '.' + fileExtension;
+    }
+
+    private String getFileNameFromFullPath(String fullPath) {
+        return fullPath.replaceAll(".*/", "");
+    }
+
+    private String getFileNameWithoutExtension(String fileName) {
+        return fileName.replaceAll("\\.[^.]+$", "");
     }
 }

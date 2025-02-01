@@ -1,0 +1,74 @@
+package com.greenpalmsolutions.security.backups.internal;
+
+import com.greenpalmsolutions.security.accounts.api.behavior.FindCurrentAccount;
+import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
+import com.greenpalmsolutions.security.backups.api.model.*;
+import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
+import com.greenpalmsolutions.security.files.api.behavior.DownloadFile;
+import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
+import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+// TODO: IT
+@Service
+@RequiredArgsConstructor
+class BackupService implements UploadBackups, DownloadBackup {
+
+    private final BackupRepository backupRepository;
+    private final UploadFile uploadFile;
+    private final DownloadFile downloadFile;
+    private final FindCurrentAccount findCurrentAccount;
+
+    @Transactional
+    @Override
+    public UploadBackupsResponse uploadBackupsForRequest(UploadBackupsRequest requests) {
+        long totalBytes = 0;
+        final String DIRECTORY_PATH = "/src/main/resources/storage/"
+                + findCurrentAccount.getUserIdForCurrentAccount();
+        for (UploadBackupRequest request : requests.getUploadBackupRequests()) {
+            if (totalBytes + request.getContentLengthInBytes() > 10000000000L) {
+                throw new RuntimeException("Backup cannot exceed 10 GB");
+            }
+
+            final String FILE_PATH = DIRECTORY_PATH + '/' + request.getFileNameWithoutExtension() + ".zip";
+            createBackupFileFor(FILE_PATH, request.getFileContents());
+            createBackupRecordFor(FILE_PATH, request.getFileExtension());
+        }
+        return new UploadBackupsResponse(totalBytes);
+    }
+
+    private void createBackupFileFor(String filePath, byte[] fileContents) {
+        uploadFile.uploadFileForRequest(new UploadFileRequest()
+                .withFileContents(fileContents)
+                .withFilePath(filePath));
+    }
+
+    private void createBackupRecordFor(String filePath, String fileExtension) {
+        Backup backup = new Backup();
+        backup.setFilePath(filePath);
+        backup.setFileExtension(fileExtension);
+        backup.setCompressed(true);
+        backup.setUserId(findCurrentAccount.getUserIdForCurrentAccount());
+        backupRepository.save(backup);
+    }
+
+    @Override
+    public BackupDetails downloadForRequest(DownloadBackupRequest request) {
+        final String FILE_PATH = "/src/main/resources/storage/"
+                + findCurrentAccount.getUserIdForCurrentAccount() + '/'
+                + request.getFileNameWithoutExtension() + ".zip";
+
+        Backup backup = findBackupForFilePath(FILE_PATH);
+
+        return new BackupDetails(
+                backup.getOriginalFileName(),
+                downloadFile.downloadFileWithFilePath(backup.getFilePath()));
+    }
+
+    private Backup findBackupForFilePath(String filePath) {
+        return backupRepository.findByFilePathAndUserId(filePath, findCurrentAccount.getUserIdForCurrentAccount())
+                .orElseThrow(() -> new RuntimeException("An error occurred while retrieving the backup"));
+    }
+}

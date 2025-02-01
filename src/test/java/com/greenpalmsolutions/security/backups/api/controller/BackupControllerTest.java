@@ -1,9 +1,9 @@
 package com.greenpalmsolutions.security.backups.api.controller;
 
-import com.greenpalmsolutions.security.backups.api.behavior.CreateBackups;
-import com.greenpalmsolutions.security.backups.api.behavior.FindBackup;
+import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
+import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
-import com.greenpalmsolutions.security.backups.api.model.CreateBackupsResponse;
+import com.greenpalmsolutions.security.backups.api.model.UploadBackupsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.Base64;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,25 +23,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BackupControllerTest {
 
     @Mock
-    private CreateBackups createBackups;
+    private UploadBackups uploadBackups;
 
     @Mock
-    private FindBackup findBackup;
+    private DownloadBackup downloadBackup;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new BackupController(createBackups, findBackup))
+                .standaloneSetup(new BackupController(uploadBackups, downloadBackup))
                 .build();
     }
 
     @Test
     void createsTheBackups() throws Exception {
-        CreateBackupsResponse theResponse = new CreateBackupsResponse(444);
+        UploadBackupsResponse theResponse = new UploadBackupsResponse(444);
 
-        when(createBackups.createBackupForRequests(any())).thenReturn(theResponse);
+        when(uploadBackups.uploadBackupsForRequest(any())).thenReturn(theResponse);
 
         MockMultipartFile file1 = new MockMultipartFile(
                 "files", "file1.txt", "text/plain", "Hello, World!".getBytes());
@@ -61,7 +59,7 @@ class BackupControllerTest {
     void findsTheBackup() throws Exception {
         BackupDetails theDetails = new BackupDetails("someone.txt", "data".getBytes());
 
-        when(findBackup.findBackupForFile(any())).thenReturn(theDetails);
+        when(downloadBackup.downloadForRequest(any())).thenReturn(theDetails);
 
         mockMvc.perform(get("/v1/backups")
                         .param("file-path", "/something/someone.txt"))

@@ -1,27 +1,27 @@
 package com.greenpalmsolutions.security.backups.api.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-// TODO: test
+// TODO: test (check name verbiage)
 @Getter
-@AllArgsConstructor
-public class CreateBackupsResponse {
+@RequiredArgsConstructor
+public class UploadBackupsResponse {
 
-    private final int sizeInBytes;
+    private final long sizeInBytes;
 
     public String getFormattedSize() {
         if (sizeInBytes < 1000) {
             return sizeInBytes + " bytes";
         }
 
-        final String[] units = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB" };
+        final String[] units = { "bytes", "KB", "MB", "GB"};
 
         double size = sizeInBytes;
         int unitIndex = 0;
 
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
+        while (size >= 1000 && unitIndex < units.length - 1) {
+            size /= 1000;
             unitIndex++;
         }
 
