@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -28,7 +29,8 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             try (FileOutputStream fos = new FileOutputStream(STORAGE_PATH.toFile());
                  ZipOutputStream zos = new ZipOutputStream(fos)) {
 
-                ZipEntry zipEntry = new ZipEntry(request.getFilePath());
+                String fileName = STORAGE_PATH.getFileName().toString();
+                ZipEntry zipEntry = new ZipEntry(fileName);
                 zos.putNextEntry(zipEntry);
 
                 zos.write(request.getFileContents());
@@ -72,6 +74,7 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
 
             for (String filePath : filePaths) {
                 unzipFile(filePath, tempDir);
+                System.out.println("Unzipped file to temporary directory");
             }
 
             return zipDirectory(tempDir);
@@ -81,12 +84,21 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
     }
 
     private void unzipFile(String zipFilePath, Path outputDir) throws IOException {
-        try (FileInputStream fis = new FileInputStream(zipFilePath);
+        System.out.println("Unzipping file with path: " + zipFilePath);
+        System.out.println("Output to temp directory: " + outputDir.toString());
+        File zipFile = new File(zipFilePath);
+
+        if (!zipFile.exists() || zipFile.length() == 0) {
+            throw new IOException("ZIP file does not exist or is empty: " + zipFilePath);
+        }
+
+        try (FileInputStream fis = new FileInputStream(zipFile);
              ZipInputStream zis = new ZipInputStream(fis)) {
 
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 Path extractedFilePath = outputDir.resolve(zipEntry.getName());
+
                 Files.createDirectories(extractedFilePath.getParent());
 
                 try (FileOutputStream fos = new FileOutputStream(extractedFilePath.toFile());
@@ -99,15 +111,21 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
                     }
                 }
             }
+        } catch (EOFException e) {
+            throw new IOException("Error reading ZIP file: Possible corruption or incomplete write.", e);
         }
     }
 
+
     private byte[] zipDirectory(Path dir) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ZipOutputStream zipOut = new ZipOutputStream(byteArrayOutputStream)) {
-            Files.walk(dir).filter(Files::isRegularFile).forEach(file -> {
+
+        try (ZipOutputStream zipOut = new ZipOutputStream(byteArrayOutputStream);
+             Stream<Path> walk = Files.walk(dir)) {
+
+            walk.filter(Files::isRegularFile).forEach(file -> {
                 try {
-                    ZipEntry zipEntry = new ZipEntry(dir.relativize(file).toString());
+                    ZipEntry zipEntry = new ZipEntry(dir.relativize(file).toString().replace("\\", "/"));
                     zipOut.putNextEntry(zipEntry);
                     Files.copy(file, zipOut);
                     zipOut.closeEntry();
@@ -116,7 +134,9 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
                 }
             });
         }
+
         return byteArrayOutputStream.toByteArray();
     }
+
 
 }
