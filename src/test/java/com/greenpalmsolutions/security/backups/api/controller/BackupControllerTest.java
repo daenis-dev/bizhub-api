@@ -1,5 +1,6 @@
 package com.greenpalmsolutions.security.backups.api.controller;
 
+import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
@@ -33,6 +34,9 @@ class BackupControllerTest {
     private DownloadBackup downloadBackup;
 
     @Mock
+    private DownloadBackups downloadBackups;
+
+    @Mock
     private FindBackupFileNames findBackupFileNames;
 
     private MockMvc mockMvc;
@@ -40,7 +44,7 @@ class BackupControllerTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new BackupController(uploadBackups, downloadBackup, findBackupFileNames))
+                .standaloneSetup(new BackupController(uploadBackups, downloadBackup, downloadBackups, findBackupFileNames))
                 .build();
     }
 

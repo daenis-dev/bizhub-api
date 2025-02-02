@@ -1,6 +1,7 @@
 package com.greenpalmsolutions.security.files.internal;
 
 import com.greenpalmsolutions.security.files.api.behavior.DownloadFile;
+import com.greenpalmsolutions.security.files.api.behavior.DownloadFilesAsZip;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
-class FileService implements DownloadFile, UploadFile {
+class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
@@ -61,4 +63,60 @@ class FileService implements DownloadFile, UploadFile {
             throw new RuntimeException("Error while downloading file", ex);
         }
     }
+
+    // TODO: IT
+    @Override
+    public byte[] downloadFilesForFilePaths(List<String> filePaths) {
+        try {
+            Path tempDir = Files.createTempDirectory("unzipped_files");
+
+            for (String filePath : filePaths) {
+                unzipFile(filePath, tempDir);
+            }
+
+            return zipDirectory(tempDir);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while processing backup files", e);
+        }
+    }
+
+    private void unzipFile(String zipFilePath, Path outputDir) throws IOException {
+        try (FileInputStream fis = new FileInputStream(zipFilePath);
+             ZipInputStream zis = new ZipInputStream(fis)) {
+
+            ZipEntry zipEntry;
+            while ((zipEntry = zis.getNextEntry()) != null) {
+                Path extractedFilePath = outputDir.resolve(zipEntry.getName());
+                Files.createDirectories(extractedFilePath.getParent());
+
+                try (FileOutputStream fos = new FileOutputStream(extractedFilePath.toFile());
+                     BufferedOutputStream bos = new BufferedOutputStream(fos)) {
+
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = zis.read(buffer)) != -1) {
+                        bos.write(buffer, 0, length);
+                    }
+                }
+            }
+        }
+    }
+
+    private byte[] zipDirectory(Path dir) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (ZipOutputStream zipOut = new ZipOutputStream(byteArrayOutputStream)) {
+            Files.walk(dir).filter(Files::isRegularFile).forEach(file -> {
+                try {
+                    ZipEntry zipEntry = new ZipEntry(dir.relativize(file).toString());
+                    zipOut.putNextEntry(zipEntry);
+                    Files.copy(file, zipOut);
+                    zipOut.closeEntry();
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while zipping file: " + file, e);
+                }
+            });
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+
 }
