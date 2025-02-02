@@ -38,6 +38,7 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/logout").hasRole(USER)
                             .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/backups").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/backups/**").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {

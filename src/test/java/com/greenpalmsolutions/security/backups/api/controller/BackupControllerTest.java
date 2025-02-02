@@ -1,5 +1,6 @@
 package com.greenpalmsolutions.security.backups.api.controller;
 
+import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
@@ -12,6 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,12 +32,15 @@ class BackupControllerTest {
     @Mock
     private DownloadBackup downloadBackup;
 
+    @Mock
+    private FindBackupFileNames findBackupFileNames;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new BackupController(uploadBackups, downloadBackup))
+                .standaloneSetup(new BackupController(uploadBackups, downloadBackup, findBackupFileNames))
                 .build();
     }
 
@@ -66,5 +73,16 @@ class BackupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Disposition", "attachment; filename=someone.txt"))
                 .andExpect(content().bytes("data".getBytes()));
+    }
+
+    @Test
+    void findsTheBackupFileNames() throws Exception {
+        List<String> theBackupFileNames = Arrays.asList("file1.txt", "file2.txt");
+
+        when(findBackupFileNames.findFileNames()).thenReturn(theBackupFileNames);
+
+        mockMvc.perform(get("/v1/backups/file-names"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]", is("file1.txt")));
     }
 }

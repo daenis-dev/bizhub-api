@@ -2,6 +2,7 @@ package com.greenpalmsolutions.security.backups.internal;
 
 import com.greenpalmsolutions.security.accounts.api.behavior.FindCurrentAccount;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
+import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.model.*;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
 import com.greenpalmsolutions.security.files.api.behavior.DownloadFile;
@@ -12,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-class BackupService implements UploadBackups, DownloadBackup {
+class BackupService implements UploadBackups, DownloadBackup, FindBackupFileNames {
 
     @Value("${app.file-storage.local.location}")
     private String FILE_STORAGE_LOCATION;
@@ -72,9 +75,14 @@ class BackupService implements UploadBackups, DownloadBackup {
     }
 
     private Backup findBackupForFilePath(String filePath, String userId) {
-        System.out.println("Filepath: " + filePath);
-        System.out.println("User ID: " + userId);
         return backupRepository.findByFilePathAndUserId(filePath, findCurrentAccount.getUserIdForCurrentAccount())
                 .orElseThrow(() -> new RuntimeException("An error occurred while retrieving the backup"));
+    }
+
+    @Override
+    public List<String> findFileNames() {
+        return backupRepository.findByUserId(findCurrentAccount.getUserIdForCurrentAccount())
+                .stream().map(Backup::getOriginalFileName)
+                .toList();
     }
 }

@@ -1,5 +1,6 @@
 package com.greenpalmsolutions.security.backups.api.controller;
 
+import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class BackupController {
 
     private final UploadBackups uploadBackups;
     private final DownloadBackup downloadBackup;
+    private final FindBackupFileNames findBackupFileNames;
 
     @PostMapping("/v1/backups")
     public ResponseEntity<UploadBackupsResponse> createBackupsFromFiles(@RequestParam("files") MultipartFile[] files) {
@@ -40,5 +44,10 @@ public class BackupController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(backupDetails.getFileContent());
+    }
+
+    @GetMapping("/v1/backups/file-names")
+    public ResponseEntity<List<String>> findBackupFileNames() {
+        return ResponseEntity.ok(findBackupFileNames.findFileNames());
     }
 }
