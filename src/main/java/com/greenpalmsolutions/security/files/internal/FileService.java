@@ -70,22 +70,20 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
     @Override
     public byte[] downloadFilesForFilePaths(List<String> filePaths) {
         try {
-            Path tempDir = Files.createTempDirectory("unzipped_files");
-            Path checkersApiDir = tempDir.resolve("checkers-api");
-            Files.createDirectories(checkersApiDir);
+            Path tempDir = Files.createTempDirectory("temp_unzip");
+            Path checkersBackupsDir = tempDir.resolve("checkers-backups");
+            Files.createDirectories(checkersBackupsDir);
 
             for (String filePath : filePaths) {
                 Path zipFilePath = Paths.get(filePath);
-                unzipFile(zipFilePath, checkersApiDir);
+                unzipFile(zipFilePath, checkersBackupsDir);
             }
 
-            return zipDirectory(checkersApiDir);
+            return zipDirectory(checkersBackupsDir);
         } catch (IOException e) {
             throw new RuntimeException("Error while processing backup files", e);
         }
     }
-
-
 
     private void unzipFile(Path zipFilePath, Path outputDir) throws IOException {
         try (FileInputStream fis = new FileInputStream(zipFilePath.toFile());
@@ -129,6 +127,7 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
 
         return byteArrayOutputStream.toByteArray();
     }
+
 
 
 }
