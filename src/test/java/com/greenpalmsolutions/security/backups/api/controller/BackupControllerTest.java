@@ -71,7 +71,7 @@ class BackupControllerTest {
         mockMvc.perform(get("/v1/backups")
                         .param("file-names", "file1.txt,file2.txt"))
                 .andExpect(status().isOk())
-                .andExpect(content().bytes(BACKUPS));  // Validate that the byte array is returned
+                .andExpect(content().bytes(BACKUPS));
     }
 
     @Test
