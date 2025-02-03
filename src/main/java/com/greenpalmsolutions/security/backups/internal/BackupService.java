@@ -71,7 +71,7 @@ class BackupService implements UploadBackups, DownloadBackup, DownloadBackups, F
                 + USER_ID;
 
         final List<String> FILE_PATHS = request.getBackupRequests().stream().map(backup ->
-                FILE_PATH + '/' + backup.getFileNameWithoutExtension() + ".zip")
+                FILE_PATH + '/' + backup.getFileName())
                 .toList();
 
         return downloadFilesAsZip.downloadFilesForFilePaths(FILE_PATHS);

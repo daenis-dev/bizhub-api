@@ -75,8 +75,11 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             Files.createDirectories(checkersBackupsDir);
 
             for (String filePath : filePaths) {
-                Path zipFilePath = Paths.get(filePath);
-                unzipFile(zipFilePath, checkersBackupsDir);
+                String originalFileName = Paths.get(filePath).getFileName().toString();
+
+                Path zipFilePath = Paths.get(filePath.replaceAll("\\.[^.]+$", ".zip"));
+
+                unzipFile(zipFilePath, checkersBackupsDir, originalFileName);
             }
 
             return zipDirectory(checkersBackupsDir);
@@ -85,13 +88,12 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
         }
     }
 
-    private void unzipFile(Path zipFilePath, Path outputDir) throws IOException {
+    private void unzipFile(Path zipFilePath, Path outputDir, String originalFileName) throws IOException {
         try (FileInputStream fis = new FileInputStream(zipFilePath.toFile());
              ZipInputStream zis = new ZipInputStream(fis)) {
 
-            ZipEntry zipEntry;
-            while ((zipEntry = zis.getNextEntry()) != null) {
-                Path extractedFilePath = outputDir.resolve(zipEntry.getName());
+            while (zis.getNextEntry() != null) {
+                Path extractedFilePath = outputDir.resolve(originalFileName);
                 Files.createDirectories(extractedFilePath.getParent());
 
                 try (FileOutputStream fos = new FileOutputStream(extractedFilePath.toFile());
@@ -106,6 +108,8 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             }
         }
     }
+
+
 
     private byte[] zipDirectory(Path dir) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
