@@ -70,14 +70,15 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
     @Override
     public byte[] downloadFilesForFilePaths(List<String> filePaths) {
         try {
-            // Create a temporary directory for extracted files
             Path tempDir = Files.createTempDirectory("unzipped_files");
+            Path checkersApiDir = tempDir.resolve("checkers-api");
+            Files.createDirectories(checkersApiDir);
 
             for (String filePath : filePaths) {
-                unzipFile(filePath, tempDir);
+                unzipFile(filePath, checkersApiDir);
             }
 
-            return zipDirectory(tempDir);
+            return zipDirectory(checkersApiDir);
         } catch (IOException e) {
             throw new RuntimeException("Error while processing backup files", e);
         }
