@@ -70,11 +70,11 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
     @Override
     public byte[] downloadFilesForFilePaths(List<String> filePaths) {
         try {
+            // Create a temporary directory for extracted files
             Path tempDir = Files.createTempDirectory("unzipped_files");
 
             for (String filePath : filePaths) {
                 unzipFile(filePath, tempDir);
-                System.out.println("Unzipped file to temporary directory");
             }
 
             return zipDirectory(tempDir);
@@ -83,22 +83,14 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
         }
     }
 
+
     private void unzipFile(String zipFilePath, Path outputDir) throws IOException {
-        System.out.println("Unzipping file with path: " + zipFilePath);
-        System.out.println("Output to temp directory: " + outputDir.toString());
-        File zipFile = new File(zipFilePath);
-
-        if (!zipFile.exists() || zipFile.length() == 0) {
-            throw new IOException("ZIP file does not exist or is empty: " + zipFilePath);
-        }
-
-        try (FileInputStream fis = new FileInputStream(zipFile);
+        try (FileInputStream fis = new FileInputStream(zipFilePath);
              ZipInputStream zis = new ZipInputStream(fis)) {
 
             ZipEntry zipEntry;
             while ((zipEntry = zis.getNextEntry()) != null) {
                 Path extractedFilePath = outputDir.resolve(zipEntry.getName());
-
                 Files.createDirectories(extractedFilePath.getParent());
 
                 try (FileOutputStream fos = new FileOutputStream(extractedFilePath.toFile());
@@ -111,11 +103,8 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
                     }
                 }
             }
-        } catch (EOFException e) {
-            throw new IOException("Error reading ZIP file: Possible corruption or incomplete write.", e);
         }
     }
-
 
     private byte[] zipDirectory(Path dir) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
