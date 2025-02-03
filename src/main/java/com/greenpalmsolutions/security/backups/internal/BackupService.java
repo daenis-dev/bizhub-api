@@ -5,7 +5,7 @@ import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.model.*;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
-import com.greenpalmsolutions.security.files.api.behavior.DownloadFilesAsZip;
+import com.greenpalmsolutions.security.files.api.behavior.DownloadFiles;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
 import jakarta.transaction.Transactional;
@@ -24,26 +24,27 @@ class BackupService implements UploadBackups, DownloadBackups, FindBackupFileNam
 
     private final BackupRepository backupRepository;
     private final UploadFile uploadFile;
-    private final DownloadFilesAsZip downloadFilesAsZip;
+    private final DownloadFiles downloadFiles;
     private final FindCurrentAccount findCurrentAccount;
 
     @Transactional
     @Override
     public UploadBackupsResponse uploadBackupsForRequest(UploadBackupsRequest requests) {
-        long totalBytes = 0;
+        final String USER_ID = findCurrentAccount.getUserIdForCurrentAccount();
+        long userStorageInBytes = backupRepository.findStorageForUserInBytes(USER_ID);
         final String DIRECTORY_PATH = FILE_STORAGE_LOCATION + '/'
                 + findCurrentAccount.getUserIdForCurrentAccount();
         for (UploadBackupRequest request : requests.getUploadBackupRequests()) {
-            if (totalBytes + request.getContentLengthInBytes() > 10000000000L) {
-                throw new RuntimeException("Backup cannot exceed 10 GB");
+            if (userStorageInBytes + request.getContentLengthInBytes() > 10000000000L) {
+                throw new RuntimeException("Maximum storage space of 10GB cannot be surpassed for the user");
             }
 
             final String FILE_PATH = DIRECTORY_PATH + '/' + request.getFileNameWithoutExtension() + ".zip";
             createBackupFileFor(FILE_PATH, request.getFileContents());
-            createBackupRecordFor(FILE_PATH, request.getFileExtension());
-            totalBytes += request.getContentLengthInBytes();
+            createBackupRecordFor(FILE_PATH, request);
+            userStorageInBytes += request.getContentLengthInBytes();
         }
-        return new UploadBackupsResponse(totalBytes);
+        return new UploadBackupsResponse(userStorageInBytes);
     }
 
     private void createBackupFileFor(String filePath, byte[] fileContents) {
@@ -52,15 +53,15 @@ class BackupService implements UploadBackups, DownloadBackups, FindBackupFileNam
                 .withFilePath(filePath));
     }
 
-    private void createBackupRecordFor(String filePath, String fileExtension) {
+    private void createBackupRecordFor(String filePath, UploadBackupRequest request) {
         Backup backup = new Backup();
         backup.setFilePath(filePath);
-        backup.setFileExtension(fileExtension);
+        backup.setFileExtension(request.getFileExtension());
+        backup.setFileSizeInBytes(request.getContentLengthInBytes());
         backup.setUserId(findCurrentAccount.getUserIdForCurrentAccount());
         backupRepository.save(backup);
     }
 
-    // TODO: IT
     @Override
     public byte[] downloadBackupsForRequest(DownloadBackupsRequest request) {
         final String USER_ID = findCurrentAccount.getUserIdForCurrentAccount();
@@ -71,7 +72,7 @@ class BackupService implements UploadBackups, DownloadBackups, FindBackupFileNam
                 FILE_PATH + '/' + backup.getFileName())
                 .toList();
 
-        return downloadFilesAsZip.downloadFilesForFilePaths(FILE_PATHS);
+        return downloadFiles.downloadZipForFilePaths(FILE_PATHS);
     }
 
     @Override

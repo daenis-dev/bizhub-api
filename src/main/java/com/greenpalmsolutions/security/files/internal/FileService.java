@@ -1,6 +1,6 @@
 package com.greenpalmsolutions.security.files.internal;
 
-import com.greenpalmsolutions.security.files.api.behavior.DownloadFilesAsZip;
+import com.greenpalmsolutions.security.files.api.behavior.DownloadFiles;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
-class FileService implements DownloadFilesAsZip, UploadFile {
+class FileService implements DownloadFiles, UploadFile {
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
@@ -40,9 +40,8 @@ class FileService implements DownloadFilesAsZip, UploadFile {
         }
     }
 
-    // TODO: IT
     @Override
-    public byte[] downloadFilesForFilePaths(List<String> filePaths) {
+    public byte[] downloadZipForFilePaths(List<String> filePaths) {
         try {
             Path tempDir = Files.createTempDirectory("temp_unzip");
             Path checkersBackupsDir = tempDir.resolve("checkers-backups");

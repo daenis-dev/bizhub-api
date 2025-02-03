@@ -5,7 +5,6 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: test
 @Getter
 public class DownloadBackupsRequest {
 

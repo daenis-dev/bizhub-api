@@ -63,6 +63,18 @@ class BackupControllerTest {
     }
 
     @Test
+    void downloadsTheBackups() throws Exception {
+        final byte[] BACKUPS = new byte[]{1, 22, 33};
+
+        when(downloadBackups.downloadBackupsForRequest(any())).thenReturn(BACKUPS);
+
+        mockMvc.perform(get("/v1/backups")
+                        .param("file-names", "file1.txt,file2.txt"))
+                .andExpect(status().isOk())
+                .andExpect(content().bytes(BACKUPS));  // Validate that the byte array is returned
+    }
+
+    @Test
     void findsTheBackupFileNames() throws Exception {
         List<String> theBackupFileNames = Arrays.asList("file1.txt", "file2.txt");
 

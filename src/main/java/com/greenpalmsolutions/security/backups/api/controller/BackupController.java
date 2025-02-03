@@ -31,7 +31,6 @@ public class BackupController {
                 HttpStatus.CREATED);
     }
 
-    // TODO: test
     @GetMapping("/v1/backups")
     public ResponseEntity<byte[]> downloadBackups(@RequestParam("file-names") String fileNames) {
         byte[] backupsAsZipFile = downloadBackups.downloadBackupsForRequest(

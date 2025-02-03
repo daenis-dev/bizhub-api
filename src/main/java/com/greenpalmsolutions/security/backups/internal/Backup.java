@@ -25,6 +25,9 @@ class Backup {
     @Column(name = "file_extension")
     private String fileExtension;
 
+    @Column(name = "uncompressed_file_size_in_bytes")
+    private long fileSizeInBytes;
+
     @Column(name = "user_id")
     private String userId;
 
