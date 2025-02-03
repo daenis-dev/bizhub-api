@@ -75,8 +75,8 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             Files.createDirectories(checkersApiDir);
 
             for (String filePath : filePaths) {
-                Path zipFilePath = Paths.get(filePath + ".zip");
-                unzipFile(zipFilePath, checkersApiDir); // Extract contents into checkers-api
+                Path zipFilePath = Paths.get(filePath);
+                unzipFile(zipFilePath, checkersApiDir);
             }
 
             return zipDirectory(checkersApiDir);
