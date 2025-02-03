@@ -3,7 +3,6 @@ package com.greenpalmsolutions.security.backups.api.controller;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
-import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +22,6 @@ import java.util.List;
 public class BackupController {
 
     private final UploadBackups uploadBackups;
-    private final DownloadBackup downloadBackup;
     private final DownloadBackups downloadBackups;
     private final FindBackupFileNames findBackupFileNames;
 
@@ -33,20 +31,8 @@ public class BackupController {
                 HttpStatus.CREATED);
     }
 
-    @GetMapping("/v1/backups")
-    public ResponseEntity<byte[]> downloadBackup(@RequestParam("file-name") String fileName) {
-        BackupDetails backupDetails = downloadBackup.downloadForRequest(new DownloadBackupRequest().withFileName(fileName));
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + backupDetails.getFileName());
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(backupDetails.getFileContent());
-    }
-
     // TODO: test
-    @GetMapping("/v1/backups/all")
+    @GetMapping("/v1/backups")
     public ResponseEntity<byte[]> downloadBackups(@RequestParam("file-names") String fileNames) {
         byte[] backupsAsZipFile = downloadBackups.downloadBackupsForRequest(
                 new DownloadBackupsRequest().addFromListOfFileNamesAsString(fileNames));

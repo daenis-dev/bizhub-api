@@ -1,6 +1,5 @@
 package com.greenpalmsolutions.security.files.internal;
 
-import com.greenpalmsolutions.security.files.api.behavior.DownloadFile;
 import com.greenpalmsolutions.security.files.api.behavior.DownloadFilesAsZip;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
@@ -17,7 +16,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
-class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
+class FileService implements DownloadFilesAsZip, UploadFile {
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
@@ -38,31 +37,6 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             }
         } catch (IOException ex) {
             throw new RuntimeException("An error occurred while backing up the file", ex);
-        }
-    }
-
-    @Override
-    public byte[] downloadFileWithFilePath(String filePath) {
-        try {
-            Path zipFilePath = Paths.get(filePath);
-            try (FileInputStream fis = new FileInputStream(zipFilePath.toFile());
-                 ZipInputStream zis = new ZipInputStream(fis)) {
-
-                ZipEntry zipEntry = zis.getNextEntry();
-                if (zipEntry != null) {
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = zis.read(buffer)) != -1) {
-                        byteArrayOutputStream.write(buffer, 0, length);
-                    }
-                    return byteArrayOutputStream.toByteArray();
-                } else {
-                    throw new FileNotFoundException("No entries found in zip file.");
-                }
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException("Error while downloading file", ex);
         }
     }
 
@@ -108,8 +82,6 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             }
         }
     }
-
-
 
     private byte[] zipDirectory(Path dir) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

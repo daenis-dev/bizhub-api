@@ -3,7 +3,6 @@ package com.greenpalmsolutions.security.backups.api.controller;
 import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackups;
 import com.greenpalmsolutions.security.backups.api.behavior.FindBackupFileNames;
 import com.greenpalmsolutions.security.backups.api.behavior.UploadBackups;
-import com.greenpalmsolutions.security.backups.api.behavior.DownloadBackup;
 import com.greenpalmsolutions.security.backups.api.model.BackupDetails;
 import com.greenpalmsolutions.security.backups.api.model.UploadBackupsResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +30,6 @@ class BackupControllerTest {
     private UploadBackups uploadBackups;
 
     @Mock
-    private DownloadBackup downloadBackup;
-
-    @Mock
     private DownloadBackups downloadBackups;
 
     @Mock
@@ -44,7 +40,7 @@ class BackupControllerTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new BackupController(uploadBackups, downloadBackup, downloadBackups, findBackupFileNames))
+                .standaloneSetup(new BackupController(uploadBackups, downloadBackups, findBackupFileNames))
                 .build();
     }
 
@@ -64,19 +60,6 @@ class BackupControllerTest {
                         .file(file2))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.formattedSize", is("444 bytes")));
-    }
-
-    @Test
-    void findsTheBackup() throws Exception {
-        BackupDetails theDetails = new BackupDetails("someone.txt", "data".getBytes());
-
-        when(downloadBackup.downloadForRequest(any())).thenReturn(theDetails);
-
-        mockMvc.perform(get("/v1/backups")
-                        .param("file-name", "someone.txt"))
-                .andExpect(status().isOk())
-                .andExpect(header().string("Content-Disposition", "attachment; filename=someone.txt"))
-                .andExpect(content().bytes("data".getBytes()));
     }
 
     @Test
