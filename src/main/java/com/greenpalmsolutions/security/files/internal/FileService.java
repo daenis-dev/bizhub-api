@@ -75,7 +75,8 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
             Files.createDirectories(checkersApiDir);
 
             for (String filePath : filePaths) {
-                unzipFile(filePath, checkersApiDir);
+                Path zipFilePath = Paths.get(filePath + ".zip");
+                unzipFile(zipFilePath, checkersApiDir); // Extract contents into checkers-api
             }
 
             return zipDirectory(checkersApiDir);
@@ -85,8 +86,9 @@ class FileService implements DownloadFile, DownloadFilesAsZip, UploadFile {
     }
 
 
-    private void unzipFile(String zipFilePath, Path outputDir) throws IOException {
-        try (FileInputStream fis = new FileInputStream(zipFilePath);
+
+    private void unzipFile(Path zipFilePath, Path outputDir) throws IOException {
+        try (FileInputStream fis = new FileInputStream(zipFilePath.toFile());
              ZipInputStream zis = new ZipInputStream(fis)) {
 
             ZipEntry zipEntry;
