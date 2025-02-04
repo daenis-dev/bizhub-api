@@ -1,3 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS backups_id_seq;
+
 CREATE TABLE backups (
 	id INT NOT NULL DEFAULT nextval('backups_id_seq') PRIMARY KEY,
     file_path VARCHAR(255) NOT NULL,

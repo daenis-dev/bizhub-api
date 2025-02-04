@@ -3,4 +3,3 @@ target/
 *.iml
 src/main/resources/certs
 .mvn/
-src/main/java/com/greenpalmsolutions/security/Main2.java
