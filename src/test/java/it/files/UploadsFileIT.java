@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class UploadsFileIT {
 
-    @Value("${app.file-storage.local.location}")
+    @Value("${app.file-storage.location}")
     private String FILE_STORAGE_LOCATION;
 
     @Autowired

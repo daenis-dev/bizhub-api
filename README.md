@@ -34,6 +34,9 @@ This repository is used to manage changes to the API codebase. Navigate to the [
   -Dkeycloak-admin-password=NA
   -Dkeycloak-bizhub-uuid=NA
   -Dspring.profiles.active=it
-```
-  
-  
+  -Djwt-issuer-uri=NA
+  -Dclient-id=NA
+  -Dkeycloak-base-url=NA
+  -Dkeycloak-bizhub-base-url=NA
+  -Dkeycloak-bizhub-login-url=NA
+  ```

@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 class BackupService implements UploadBackups, DownloadBackups, FindBackupFileNames {
 
-    @Value("${app.file-storage.local.location}")
+    @Value("${app.file-storage.location}")
     private String FILE_STORAGE_LOCATION;
 
     private final BackupRepository backupRepository;

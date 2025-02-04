@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class UploadBackupsIT {
 
-    @Value("${app.file-storage.local.location}")
+    @Value("${app.file-storage.location}")
     private String FILE_STORAGE_LOCATION;
 
     @Autowired
