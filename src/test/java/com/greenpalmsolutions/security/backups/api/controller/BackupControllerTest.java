@@ -59,7 +59,7 @@ class BackupControllerTest {
                         .file(file1)
                         .file(file2))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.formattedSize", is("444 bytes")));
+                .andExpect(jsonPath("$.occupiedUserStorageInBytes", is("444 bytes")));
     }
 
     @Test

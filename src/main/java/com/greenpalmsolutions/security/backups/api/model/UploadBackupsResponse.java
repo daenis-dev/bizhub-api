@@ -1,22 +1,20 @@
 package com.greenpalmsolutions.security.backups.api.model;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public class UploadBackupsResponse {
 
-    private final long sizeInBytes;
+    private final long occupiedUserStorageInBytes;
 
-    public String getFormattedSize() {
-        if (sizeInBytes < 1000) {
-            return sizeInBytes + " bytes";
+    public String getOccupiedUserStorageInBytes() {
+        if (occupiedUserStorageInBytes < 1000) {
+            return occupiedUserStorageInBytes + " bytes";
         }
 
         final String[] units = { "bytes", "KB", "MB", "GB"};
 
-        double size = sizeInBytes;
+        double size = occupiedUserStorageInBytes;
         int unitIndex = 0;
 
         while (size >= 1000 && unitIndex < units.length - 1) {

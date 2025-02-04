@@ -9,37 +9,37 @@ class UploadBackupsResponseTest {
     private UploadBackupsResponse uploadBackupsResponse;
 
     @Test
-    void getsTheFormattedSizeForBytes() {
+    void getsTheOccupiedUserStorageInBytes() {
         uploadBackupsResponse = new UploadBackupsResponse(100);
 
-        String theFormattedSize = uploadBackupsResponse.getFormattedSize();
+        String theFormattedSize = uploadBackupsResponse.getOccupiedUserStorageInBytes();
 
         assertThat(theFormattedSize).isEqualTo("100 bytes");
     }
 
     @Test
-    void getsTheFormattedSizeForKilobytes() {
+    void getsTheOccupiedUserStorageInBytesForKilobytes() {
         uploadBackupsResponse = new UploadBackupsResponse(3000L);
 
-        String theFormattedSize = uploadBackupsResponse.getFormattedSize();
+        String theFormattedSize = uploadBackupsResponse.getOccupiedUserStorageInBytes();
 
         assertThat(theFormattedSize).isEqualTo("3.0 KB");
     }
 
     @Test
-    void getsTheFormattedSizeForMegabytes() {
+    void getsTheOccupiedUserStorageInBytesForMegabytes() {
         uploadBackupsResponse = new UploadBackupsResponse(4000000L);
 
-        String theFormattedSize = uploadBackupsResponse.getFormattedSize();
+        String theFormattedSize = uploadBackupsResponse.getOccupiedUserStorageInBytes();
 
         assertThat(theFormattedSize).isEqualTo("4.0 MB");
     }
 
     @Test
-    void getsTheFormattedSizeForGigabytes() {
+    void getsTheOccupiedUserStorageInBytesForGigabytes() {
         uploadBackupsResponse = new UploadBackupsResponse(7000000000L);
 
-        String theFormattedSize = uploadBackupsResponse.getFormattedSize();
+        String theFormattedSize = uploadBackupsResponse.getOccupiedUserStorageInBytes();
 
         assertThat(theFormattedSize).isEqualTo("7.0 GB");
     }

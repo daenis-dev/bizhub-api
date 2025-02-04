@@ -69,7 +69,7 @@ public class UploadBackupsIT {
         boolean theFilesExist = Files.exists(Paths.get(FILE_STORAGE_LOCATION + "/123-abc/file1.zip"))
                 && Files.exists(Paths.get(FILE_STORAGE_LOCATION + "/123-abc/file2.zip"));
         assertThat(theFilesExist).isTrue();
-        assertThat(theResponse.getFormattedSize()).isEqualTo("48 bytes");
+        assertThat(theResponse.getOccupiedUserStorageInBytes()).isEqualTo("48 bytes");
     }
 
     @Transactional
