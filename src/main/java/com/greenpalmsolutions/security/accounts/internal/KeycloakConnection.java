@@ -40,26 +40,26 @@ class KeycloakConnection {
     @Value("${keycloak.admin.client-name}")
     private String KEYCLOAK_ADMIN_CLIENT_NAME;
 
-    @Value("${keycloak.checkers.base-url}")
-    private String KEYCLOAK_CHECKERS_BASE_URL;
+    @Value("${keycloak.bizhub.base-url}")
+    private String KEYCLOAK_BIZHUB_BASE_URL;
 
-    @Value("${keycloak.checkers.users-api-url}")
-    private String KEYCLOAK_CHECKERS_USERS_API;
+    @Value("${keycloak.bizhub.users-api-url}")
+    private String KEYCLOAK_BIZHUB_USERS_API;
 
-    @Value("${keycloak.checkers.token-schema}")
-    private String KEYCLOAK_CHECKERS_TOKEN_SCHEMA;
+    @Value("${keycloak.bizhub.token-schema}")
+    private String KEYCLOAK_BIZHUB_TOKEN_SCHEMA;
 
-    @Value("${keycloak.checkers.login-url}")
-    private String KEYCLOAK_CHECKERS_LOGIN_URL;
+    @Value("${keycloak.bizhub.login-url}")
+    private String KEYCLOAK_BIZHUB_LOGIN_URL;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
-    private String KEYCLOAK_CHECKERS_JWT_URI;
+    private String KEYCLOAK_BIZHUB_JWT_URI;
 
-    @Value("${keycloak.checkers.uuid}")
-    private String KEYCLOAK_CHECKERS_UUID;
+    @Value("${keycloak.bizhub.uuid}")
+    private String KEYCLOAK_BIZHUB_UUID;
 
     @Value("${jwt.auth.converter.resource-id}")
-    private String KEYCLOAK_CHECKERS_RESOURCE_ID;
+    private String KEYCLOAK_BIZHUB_RESOURCE_ID;
 
     private final KeycloakClientRoleFactory keycloakClientRoleFactory;
 
@@ -77,10 +77,10 @@ class KeycloakConnection {
 
     private WebClient adminWebClient() {
         Keycloak keycloak = Keycloak.getInstance(KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_REALM, KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_ADMIN_CLIENT_NAME);
-        String accessToken = KEYCLOAK_CHECKERS_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
+        String accessToken = KEYCLOAK_BIZHUB_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
         return WebClient
                 .builder()
-                .baseUrl(KEYCLOAK_CHECKERS_BASE_URL)
+                .baseUrl(KEYCLOAK_BIZHUB_BASE_URL)
                 .defaultHeaders(httpHeaders -> {
                     httpHeaders.add(HttpHeaders.ACCEPT, ALL_VALUE);
                     httpHeaders.add(HttpHeaders.AUTHORIZATION, accessToken);
@@ -96,7 +96,7 @@ class KeycloakConnection {
     private void createTheUserWithoutAnyRoles(WebClient webClient, RegistrationRequest request) {
         KeycloakResponse keycloakResponse = webClient
                 .post()
-                .uri(KEYCLOAK_CHECKERS_USERS_API)
+                .uri(KEYCLOAK_BIZHUB_USERS_API)
                 .contentType(APPLICATION_JSON)
                 .bodyValue(new KeycloakUser().mappedFrom(request))
                 .exchangeToMono(response -> response.bodyToMono(KeycloakResponse.class))
@@ -109,7 +109,7 @@ class KeycloakConnection {
     private void addRoleToUser(WebClient webClient, RegistrationRequest request) {
         KeycloakResponse keycloakRoleResponse = webClient
                 .post()
-                .uri(KEYCLOAK_CHECKERS_USERS_API + "/" + getUserDetails(webClient, request).getId() + "/role-mappings/clients/" + "2fc108f7-7aa3-4848-a875-5b96de059c1d")
+                .uri(KEYCLOAK_BIZHUB_USERS_API + "/" + getUserDetails(webClient, request).getId() + "/role-mappings/clients/" + "2fc108f7-7aa3-4848-a875-5b96de059c1d")
                 .contentType(APPLICATION_JSON)
                 .bodyValue(Arrays.asList(keycloakClientRoleFactory.forRole("user")))
                 .exchangeToMono(response -> response.bodyToMono(KeycloakResponse.class))
@@ -122,7 +122,7 @@ class KeycloakConnection {
     private KeycloakUserDetails getUserDetails(WebClient webClient, RegistrationRequest request) {
         KeycloakUserDetails userDetails = webClient
                 .get()
-                .uri(KEYCLOAK_CHECKERS_USERS_API + "?username=" + request.getEmailAddress())
+                .uri(KEYCLOAK_BIZHUB_USERS_API + "?username=" + request.getEmailAddress())
                 .exchangeToMono(response -> response.bodyToMono(KeycloakUserDetails[].class))
                 .block(Duration.ofSeconds(10))[0];
         if (userDetails == null || userDetails.getId() == null || userDetails.getId().equalsIgnoreCase("")) {
@@ -132,7 +132,7 @@ class KeycloakConnection {
     }
 
     LoginResponse getAccessTokenFromTheAuthorizationServerForThe(LoginRequest request) {
-        return theTokenFor(request).toLoginResponseFromJwtUri(KEYCLOAK_CHECKERS_JWT_URI);
+        return theTokenFor(request).toLoginResponseFromJwtUri(KEYCLOAK_BIZHUB_JWT_URI);
     }
 
     private KeycloakToken theTokenFor(LoginRequest theRequest) {
@@ -143,7 +143,7 @@ class KeycloakConnection {
                                 .body(BodyInserters
                                         .fromFormData("username", theRequest.getEmailAddress())
                                         .with("password", theRequest.getPassword())
-                                        .with("client_id", KEYCLOAK_CHECKERS_RESOURCE_ID)
+                                        .with("client_id", KEYCLOAK_BIZHUB_RESOURCE_ID)
                                         .with("grant_type", "password"))
                                 .exchangeToMono(response -> response.bodyToMono(KeycloakToken.class))
                                 .block(Duration.ofSeconds(10))))
@@ -153,7 +153,7 @@ class KeycloakConnection {
     private WebClient userWebClient() {
         return WebClient
                 .builder()
-                .baseUrl(KEYCLOAK_CHECKERS_LOGIN_URL)
+                .baseUrl(KEYCLOAK_BIZHUB_LOGIN_URL)
                 .defaultHeaders(httpHeaders -> {
                     httpHeaders.add(HttpHeaders.ACCEPT, ALL_VALUE);
                 })
@@ -162,11 +162,11 @@ class KeycloakConnection {
 
     void sendEmailToResetPasswordForRequest(ResetPasswordRequest request) {
         Keycloak keycloak = Keycloak.getInstance(KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_REALM, KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_ADMIN_CLIENT_NAME);
-        String accessToken = KEYCLOAK_CHECKERS_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
+        String accessToken = KEYCLOAK_BIZHUB_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
 
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl(KEYCLOAK_CHECKERS_BASE_URL)
+                .baseUrl(KEYCLOAK_BIZHUB_BASE_URL)
                 .defaultHeaders(httpHeaders -> {
                     httpHeaders.add(HttpHeaders.ACCEPT, ALL_VALUE);
                     httpHeaders.add(HttpHeaders.AUTHORIZATION, accessToken);

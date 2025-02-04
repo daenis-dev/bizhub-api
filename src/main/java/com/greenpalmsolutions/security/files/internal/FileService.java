@@ -44,18 +44,18 @@ class FileService implements DownloadFiles, UploadFile {
     public byte[] downloadZipForFilePaths(List<String> filePaths) {
         try {
             Path tempDir = Files.createTempDirectory("temp_unzip");
-            Path checkersBackupsDir = tempDir.resolve("checkers-backups");
-            Files.createDirectories(checkersBackupsDir);
+            Path bizhubBackupsDir = tempDir.resolve("bizhub-backups");
+            Files.createDirectories(bizhubBackupsDir);
 
             for (String filePath : filePaths) {
                 String originalFileName = Paths.get(filePath).getFileName().toString();
 
                 Path zipFilePath = Paths.get(filePath.replaceAll("\\.[^.]+$", ".zip"));
 
-                unzipFile(zipFilePath, checkersBackupsDir, originalFileName);
+                unzipFile(zipFilePath, bizhubBackupsDir, originalFileName);
             }
 
-            return zipDirectory(checkersBackupsDir);
+            return zipDirectory(bizhubBackupsDir);
         } catch (IOException e) {
             throw new RuntimeException("Error while processing backup files", e);
         }

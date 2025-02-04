@@ -37,7 +37,7 @@ public class BackupController {
                 new DownloadBackupsRequest().addFromListOfFileNamesAsString(fileNames));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=checkers-backup.zip");
+        headers.add("Content-Disposition", "attachment; filename=bizhub-backup.zip");
 
         return ResponseEntity.ok()
                 .headers(headers)

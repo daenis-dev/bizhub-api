@@ -3,11 +3,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.greenpalmsolutions.security</groupId>
-  <artifactId>checkers-api</artifactId>
+  <groupId>com.greenpalmsolutions.services</groupId>
+  <artifactId>bizhub-api</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>checkers-api</name>
+  <name>bizhub-api</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

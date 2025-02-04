@@ -26,8 +26,8 @@ final class KeycloakUser {
         this.enabled = true;
         this.username = request.getEmailAddress();
         this.credentials = Collections.singletonList(new KeycloakCredentials(request.getPassword(), false));
-        realmRoles.add("checkers_api_user");
-        clientRoles.put("checkers_api", new String[]{ "user" });
+        realmRoles.add("bizhub_api_user");
+        clientRoles.put("bizhub_api", new String[]{ "user" });
         return this;
     }
 }
