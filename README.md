@@ -20,19 +20,19 @@ This repository is used to manage changes to the API codebase. Navigate to the [
   keytool -genkeypair -alias bizhub-api -keyalg RSA -keysize 4096 -storetype PKCS12 -keystore bizhub-api.p12 -validity 3650 -storepass changeit
   ```
 
-- Create a database in PostgreSQL named *checkers*. Run the script located at *src/main/resources/sql/schema.sql*
+- Create a database in PostgreSQL named *bizhub*. Run the script located at *src/main/resources/sql/schema.sql*
 
 - Open the project within IntelliJ and execute all tests using the following VM options:
 
   ```
-  -Dkeystore-path=/c/Users/dkala/projects/checkers-antivirus/bizhub-api/src/main/resources/certs/bizhub-api.p12
+  -Dkeystore-path=/c/Users/dkala/projects/bizhub/bizhub-api/src/main/resources/certs/bizhub-api.p12
   -Dkeystore-password=changeit
   -Ddatabase-url=jdbc:postgresql://localhost:5432/bizhub
   -Ddatabase-username=postgres
   -Ddatabase-password=changeitdb
   -Dkeycloak-admin-username=NA
   -Dkeycloak-admin-password=NA
-  -Dkeycloak-checkers-uuid=NA
+  -Dkeycloak-bizhub-uuid=NA
   -Dspring.profiles.active=it
 ```
   
