@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 interface BackupRepository extends JpaRepository<Backup, Long> {
 
-    @Query("SELECT SUM(b.fileSizeInBytes) FROM Backup b WHERE b.userId = :userId")
+    @Query("SELECT COALESCE(SUM(b.fileSizeInBytes), 0) FROM Backup b WHERE b.userId = :userId")
     long findStorageForUserInBytes(@Param("userId") String userId);
 
     List<Backup> findByUserId(String userId);
