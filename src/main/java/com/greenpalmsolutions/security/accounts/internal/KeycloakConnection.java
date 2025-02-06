@@ -109,7 +109,7 @@ class KeycloakConnection {
     private void addRoleToUser(WebClient webClient, RegistrationRequest request) {
         KeycloakResponse keycloakRoleResponse = webClient
                 .post()
-                .uri(KEYCLOAK_BIZHUB_USERS_API + "/" + getUserDetails(webClient, request).getId() + "/role-mappings/clients/" + "2fc108f7-7aa3-4848-a875-5b96de059c1d")
+                .uri(KEYCLOAK_BIZHUB_USERS_API + "/" + getUserDetails(webClient, request).getId() + "/role-mappings/clients/" + "8b18673e-fdde-4da8-8835-fb9acf2be047")
                 .contentType(APPLICATION_JSON)
                 .bodyValue(Arrays.asList(keycloakClientRoleFactory.forRole("user")))
                 .exchangeToMono(response -> response.bodyToMono(KeycloakResponse.class))
