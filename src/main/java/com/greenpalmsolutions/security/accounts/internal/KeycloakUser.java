@@ -17,8 +17,8 @@ final class KeycloakUser {
     @EqualsAndHashCode.Include
     private String username;
     private List<KeycloakCredentials> credentials;
-    private final List<String> realmRoles = new ArrayList<>();
-    private final Map<String, String[]> clientRoles = new HashMap<>();
+//    private final List<String> realmRoles = new ArrayList<>();
+//    private final Map<String, String[]> clientRoles = new HashMap<>();
 
     KeycloakUser mappedFrom(RegistrationRequest request) {
         this.email = request.getEmailAddress();
@@ -26,8 +26,8 @@ final class KeycloakUser {
         this.enabled = true;
         this.username = request.getEmailAddress();
         this.credentials = Collections.singletonList(new KeycloakCredentials(request.getPassword(), false));
-        realmRoles.add("bizhub_api_user");
-        clientRoles.put("bizhub_api", new String[]{ "user" });
+//        realmRoles.add("bizhub_api_user");
+//        clientRoles.put("bizhub_api", new String[]{ "user" });
         return this;
     }
 }

@@ -27,11 +27,11 @@ This repository is used to manage changes to the API codebase. Navigate to the [
   ```
   -Dkeystore-path=/c/Users/dkala/projects/bizhub/bizhub-api/src/main/resources/certs/bizhub-api.p12
   -Dkeystore-password=changeit
-  -Ddatabase-url=jdbc:postgresql://localhost:5432/bizhub
-  -Ddatabase-username=postgres
-  -Ddatabase-password=changeitdb
-  -Dkeycloak-admin-username=NA
-  -Dkeycloak-admin-password=NA
+  -DSPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/bizhub
+  -DSPRING_DATASOURCE_USERNAME=postgres
+  -DSPRING_DATASOURCE_PASSWORD=changeitdb
+  -DAUTH_ADMIN=NA
+  -DAUTH_PASSWORD=NA
   -Dkeycloak-bizhub-uuid=NA
   -Dspring.profiles.active=it
   -Djwt-issuer-uri=NA
@@ -40,3 +40,13 @@ This repository is used to manage changes to the API codebase. Navigate to the [
   -Dkeycloak-bizhub-base-url=NA
   -Dkeycloak-bizhub-login-url=NA
   ```
+  
+  And Environment Variables:
+  
+  ```
+  SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bizhub
+  SPRING_DATASOURCE_USERNAME:postgres
+  SPRING_DATASOURCE_PASSWORD:changeitdb
+  ```
+  
+  
