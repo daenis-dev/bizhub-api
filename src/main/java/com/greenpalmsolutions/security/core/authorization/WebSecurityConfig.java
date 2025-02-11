@@ -34,6 +34,7 @@ public class WebSecurityConfig {
                     authorizeRequests
                             .requestMatchers(HttpMethod.POST, "/v1/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/reset-password").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/logout").hasRole(USER)
                             .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
