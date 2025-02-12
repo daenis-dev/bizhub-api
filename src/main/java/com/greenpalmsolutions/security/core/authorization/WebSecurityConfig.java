@@ -61,7 +61,13 @@ public class WebSecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+        corsConfiguration.setAllowedOrigins(
+                Arrays.asList(
+                        "http://localhost:4200",
+                        "https://bizhub.greenpalm-solutions.com",
+                        "https://www.bizhub.greenpalm-solutions.com"
+                )
+        );
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
