@@ -3,7 +3,13 @@ package com.greenpalmsolutions.security.files.internal;
 import com.greenpalmsolutions.security.files.api.behavior.DownloadFiles;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -16,27 +22,30 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@AllArgsConstructor
 class FileService implements DownloadFiles, UploadFile {
+
+    @Value("${user-file-bucket-name}")
+    private String BUCKET_NAME;
+
+    private final S3Client s3Client;
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
-        final Path STORAGE_PATH = Paths.get(request.getFilePath());
+        final String s3Key = request.getFilePath();
 
         try {
-            Files.createDirectories(STORAGE_PATH.getParent());
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(BUCKET_NAME)
+                    .key(s3Key)
+                    .build();
 
-            try (FileOutputStream fos = new FileOutputStream(STORAGE_PATH.toFile());
-                 ZipOutputStream zos = new ZipOutputStream(fos)) {
-
-                String fileName = STORAGE_PATH.getFileName().toString();
-                ZipEntry zipEntry = new ZipEntry(fileName);
-                zos.putNextEntry(zipEntry);
-
-                zos.write(request.getFileContents());
-                zos.closeEntry();
+            try (ByteArrayInputStream fileContentsStream = new ByteArrayInputStream(request.getFileContents())) {
+                s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(fileContentsStream, request.getFileContents().length));
             }
+
         } catch (IOException ex) {
-            throw new RuntimeException("An error occurred while backing up the file", ex);
+            throw new RuntimeException("An error occurred while uploading the file to S3", ex);
         }
     }
 
@@ -50,20 +59,33 @@ class FileService implements DownloadFiles, UploadFile {
             for (String filePath : filePaths) {
                 String originalFileName = Paths.get(filePath).getFileName().toString();
 
-                Path zipFilePath = Paths.get(filePath.replaceAll("\\.[^.]+$", ".zip"));
+                ResponseInputStream<GetObjectResponse> s3ObjectInputStream = downloadFileFromS3(filePath);
 
-                unzipFile(zipFilePath, bizhubBackupsDir, originalFileName);
+                unzipFile(s3ObjectInputStream, bizhubBackupsDir, originalFileName);
             }
 
             return zipDirectory(bizhubBackupsDir);
+
         } catch (IOException e) {
             throw new RuntimeException("Error while processing backup files", e);
         }
     }
 
-    private void unzipFile(Path zipFilePath, Path outputDir, String originalFileName) throws IOException {
-        try (FileInputStream fis = new FileInputStream(zipFilePath.toFile());
-             ZipInputStream zis = new ZipInputStream(fis)) {
+    private ResponseInputStream<GetObjectResponse> downloadFileFromS3(String filePath) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(BUCKET_NAME)
+                .key(filePath)
+                .build();
+
+        try {
+            return s3Client.getObject(getObjectRequest);
+        } catch (S3Exception e) {
+            throw new RuntimeException("Failed to download file from S3: " + filePath, e);
+        }
+    }
+
+    private void unzipFile(ResponseInputStream<GetObjectResponse> s3ObjectInputStream, Path outputDir, String originalFileName) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(s3ObjectInputStream)) {
 
             while (zis.getNextEntry() != null) {
                 Path extractedFilePath = outputDir.resolve(originalFileName);
@@ -102,7 +124,5 @@ class FileService implements DownloadFiles, UploadFile {
 
         return byteArrayOutputStream.toByteArray();
     }
-
-
 
 }
