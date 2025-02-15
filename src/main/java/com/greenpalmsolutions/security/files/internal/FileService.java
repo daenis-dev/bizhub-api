@@ -3,7 +3,7 @@ package com.greenpalmsolutions.security.files.internal;
 import com.greenpalmsolutions.security.files.api.behavior.DownloadFiles;
 import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 class FileService implements DownloadFiles, UploadFile {
 
     @Value("${user-file-bucket-name}")
