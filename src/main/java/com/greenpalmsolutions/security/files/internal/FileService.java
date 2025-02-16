@@ -74,7 +74,7 @@ class FileService implements DownloadFiles, UploadFile {
     private ResponseInputStream<GetObjectResponse> downloadFileFromS3(String filePath) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(BUCKET_NAME)
-                .key(filePath)
+                .key(filePath.replaceAll("\\.[^.]*$", ".zip"))
                 .build();
 
         try {
