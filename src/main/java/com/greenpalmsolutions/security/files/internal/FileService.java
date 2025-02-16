@@ -32,22 +32,37 @@ class FileService implements DownloadFiles, UploadFile {
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
-        final String s3Key = request.getFilePath();
+        final String s3Key = request.getFilePath().replaceAll("\\.[^.]*$", ".zip");
 
         try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
+                ZipEntry zipEntry = new ZipEntry(new File(request.getFilePath()).getName());
+                zipOutputStream.putNextEntry(zipEntry);
+
+                try (ByteArrayInputStream fileContentsStream = new ByteArrayInputStream(request.getFileContents())) {
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fileContentsStream.read(buffer)) >= 0) {
+                        zipOutputStream.write(buffer, 0, length);
+                    }
+                }
+
+                zipOutputStream.closeEntry();
+            }
+
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(BUCKET_NAME)
                     .key(s3Key)
                     .build();
 
-            try (ByteArrayInputStream fileContentsStream = new ByteArrayInputStream(request.getFileContents())) {
-                s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(fileContentsStream, request.getFileContents().length));
-            }
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(byteArrayOutputStream.toByteArray()));
 
         } catch (IOException ex) {
-            throw new RuntimeException("An error occurred while uploading the file to S3", ex);
+            throw new RuntimeException("An error occurred while zipping and uploading the file to S3", ex);
         }
     }
+
 
     @Override
     public byte[] downloadZipForFilePaths(List<String> filePaths) {

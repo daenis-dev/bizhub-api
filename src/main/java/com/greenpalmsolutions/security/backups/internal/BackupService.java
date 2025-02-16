@@ -39,7 +39,7 @@ class BackupService implements UploadBackups, DownloadBackups, FindBackupFileNam
                 throw new RuntimeException("Maximum storage space of 10GB cannot be surpassed for the user");
             }
 
-            final String FILE_PATH = DIRECTORY_PATH + '/' + request.getFileNameWithoutExtension() + ".zip";
+            final String FILE_PATH = DIRECTORY_PATH + '/' + request.getFileName();
             createBackupFileFor(FILE_PATH, request.getFileContents());
             createBackupRecordFor(FILE_PATH, request);
             userStorageInBytes += request.getContentLengthInBytes();
