@@ -100,7 +100,7 @@ class KeycloakConnection {
                 .contentType(APPLICATION_JSON)
                 .bodyValue(new KeycloakUser().mappedFrom(request))
                 .exchangeToMono(response -> response.bodyToMono(KeycloakResponse.class))
-                .block(Duration.ofSeconds(10));
+                .block(Duration.ofSeconds(30));
         if (keycloakResponse != null && keycloakResponse.getError() != null && !keycloakResponse.getError().isEmpty()) {
             throw new RuntimeException("An error occurred while registering the user with message from Keycloak: " + keycloakResponse.getError());
         }
@@ -113,7 +113,7 @@ class KeycloakConnection {
                 .contentType(APPLICATION_JSON)
                 .bodyValue(Arrays.asList(keycloakClientRoleFactory.forRole("user")))
                 .exchangeToMono(response -> response.bodyToMono(KeycloakResponse.class))
-                .block(Duration.ofSeconds(10));
+                .block(Duration.ofSeconds(30));
         if (keycloakRoleResponse != null && keycloakRoleResponse.getError() != null && !keycloakRoleResponse.getError().isEmpty()) {
             throw new RuntimeException("An error occurred while registering the user with message from Keycloak: " + keycloakRoleResponse.getError());
         }
@@ -124,7 +124,7 @@ class KeycloakConnection {
                 .get()
                 .uri(KEYCLOAK_BIZHUB_USERS_API + "?username=" + request.getEmailAddress())
                 .exchangeToMono(response -> response.bodyToMono(KeycloakUserDetails[].class))
-                .block(Duration.ofSeconds(10))[0];
+                .block(Duration.ofSeconds(30))[0];
         if (userDetails == null || userDetails.getId() == null || userDetails.getId().equalsIgnoreCase("")) {
             throw new RuntimeException("An error occurred while registering the user");
         }
@@ -146,7 +146,7 @@ class KeycloakConnection {
                                         .with("client_id", KEYCLOAK_BIZHUB_RESOURCE_ID)
                                         .with("grant_type", "password"))
                                 .exchangeToMono(response -> response.bodyToMono(KeycloakToken.class))
-                                .block(Duration.ofSeconds(10))))
+                                .block(Duration.ofSeconds(30))))
                 .orElseThrow(() -> new RuntimeException("Error occurred while logging into authorization server"));
     }
 
@@ -177,7 +177,7 @@ class KeycloakConnection {
                 .get()
                 .uri(uriBuilder -> uriBuilder.path("/users").queryParam("username", request.getEmailAddress()).build())
                 .exchangeToMono(response -> response.bodyToMono(List.class))
-                .block(Duration.ofSeconds(10));
+                .block(Duration.ofSeconds(30));
 
         if (keycloakUserDetails == null || keycloakUserDetails.isEmpty()) {
             throw new RuntimeException("Cannot retrieve user details because they do not exist");
