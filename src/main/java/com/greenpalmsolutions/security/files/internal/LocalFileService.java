@@ -22,7 +22,7 @@ class LocalFileService implements DownloadFiles, UploadFile {
 
     @Override
     public void uploadFileForRequest(UploadFileRequest request) {
-        final Path STORAGE_PATH = Paths.get(request.getFilePath());
+        final Path STORAGE_PATH = Paths.get(request.getFilePath().replaceAll("\\.[^.]*$", ".zip"));
 
         try {
             Files.createDirectories(STORAGE_PATH.getParent());

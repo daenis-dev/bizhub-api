@@ -78,7 +78,7 @@ public class UploadBackupsIT {
     void throwsAnExceptionIfTheUserExceedsTenGigabytesOfStorage() {
         entityManager.createNativeQuery(
                 "INSERT INTO backups (file_path, uncompressed_file_size_in_bytes, file_extension, user_id) VALUES ("
-                        + "'src/test/resources/storage/123-abc/big.zip', 9999999977, 'txt', '123-abc')"
+                        + "'src/test/resources/storage/123-abc/big.txt', 9999999977, 'txt', '123-abc')"
         ).executeUpdate();
         MockMultipartFile file1 = new MockMultipartFile(
                 "files", "file1.txt", "text/plain", "Hello, World!".getBytes());
@@ -103,9 +103,9 @@ public class UploadBackupsIT {
                         + "(b.userId = :userId AND (b.filePath = :filePathOne OR b.filePath = :filePathTwo)) OR "
                         + "(b.userId = :userId AND b.filePath = :filePathThree)")
                 .setParameter("userId", "123-abc")
-                .setParameter("filePathOne", "src/test/resources/storage/123-abc/file1.zip")
-                .setParameter("filePathTwo", "src/test/resources/storage/123-abc/file2.zip")
-                .setParameter("filePathThree", "src/test/resources/storage/123-abc/big.zip")
+                .setParameter("filePathOne", "src/test/resources/storage/123-abc/file1.txt")
+                .setParameter("filePathTwo", "src/test/resources/storage/123-abc/file2.txt")
+                .setParameter("filePathThree", "src/test/resources/storage/123-abc/big.txt")
                 .executeUpdate();
     }
 }
