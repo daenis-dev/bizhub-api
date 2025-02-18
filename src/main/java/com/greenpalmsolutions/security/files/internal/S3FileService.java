@@ -5,6 +5,7 @@ import com.greenpalmsolutions.security.files.api.behavior.UploadFile;
 import com.greenpalmsolutions.security.files.api.model.UploadFileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -21,9 +22,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+@Profile("prod")
 @Service
 @RequiredArgsConstructor
-class FileService implements DownloadFiles, UploadFile {
+class S3FileService implements DownloadFiles, UploadFile {
 
     @Value("${user-file-bucket-name}")
     private String BUCKET_NAME;
