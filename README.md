@@ -25,28 +25,28 @@ This repository is used to manage changes to the API codebase. Navigate to the [
 - Open the project within IntelliJ and execute all tests using the following VM options:
 
   ```
-  -Dkeystore-path=/c/Users/dkala/projects/bizhub/bizhub-api/src/main/resources/certs/bizhub-api.p12
-  -Dkeystore-password=changeit
-  -DSPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/bizhub
-  -DSPRING_DATASOURCE_USERNAME=postgres
-  -DSPRING_DATASOURCE_PASSWORD=changeitdb
-  -DAUTH_ADMIN=NA
-  -DAUTH_PASSWORD=NA
-  -Dkeycloak-bizhub-uuid=NA
+  -Dserver.ssl.key-store=/c/Users/username/projects/bizhub/bizhub-api/src/main/resources/certs/bizhub-api.p12
+  -Dserver.ssl.key-store-password=changeit
+  -Dserver.ssl.key-store-type=pkcs12
+  -Dserver.ssl.key-alias=bizhub-api
+  -Dserver.ssl.key-password=changeit
+  -Dhibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+  -Dspring.datasource.url=jdbc:postgresql://localhost:5432/bizhub
+  -Dspring.datasource.username=postgres
+  -Dspring.datasource.password=changeitdb
+  -Dspring.jpa.hibernate.ddl-auto=none
+  -Dkeycloak.admin.username=auth-admin
+  -Dkeycloak.admin.password=changeit
+  -Dkeycloak-admin-client-name=admin-cli
+  -Dkeycloak-bizhub-uuid=2fc108f7-7aa3-4848-a875-5b96de059c1d
   -Dspring.profiles.active=it
-  -Djwt-issuer-uri=NA
+  -Djwt-issuer-uri=https://keycloak-server:9880/realms/bizhub
+  -Djwk-set-uri=https://keycloak-server:9880/realms/bizhub/protocol/openid-connect/certs
   -Dclient-id=NA
   -Dkeycloak-base-url=NA
   -Dkeycloak-bizhub-base-url=NA
   -Dkeycloak-bizhub-login-url=NA
-  ```
-  
-  And Environment Variables:
-  
-  ```
-  SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bizhub
-  SPRING_DATASOURCE_USERNAME:postgres
-  SPRING_DATASOURCE_PASSWORD:changeitdb
+  -Dkeycloak-bizhub-token-schema=NA
   ```
   
   
