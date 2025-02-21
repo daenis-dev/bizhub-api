@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class AccountService implements Login, Register, ResetPassword, FindCurrentAccount {
+class AccountService implements Login, Register, ResetPassword, FindCurrentAccount, FindUserIdForUsername {
 
     private final KeycloakConnection keycloakConnection;
 
@@ -40,5 +40,10 @@ class AccountService implements Login, Register, ResetPassword, FindCurrentAccou
         }
 
         return jwt.getSubject();
+    }
+
+    @Override
+    public String findForUsername(String username) {
+        return keycloakConnection.findUserIdForUsername(username);
     }
 }

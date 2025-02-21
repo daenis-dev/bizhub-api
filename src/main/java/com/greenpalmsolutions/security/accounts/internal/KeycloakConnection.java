@@ -198,4 +198,9 @@ class KeycloakConnection {
                 .bodyToMono(Void.class)
                 .block(Duration.ofSeconds(30));
     }
+
+    // TODO: Keycloak - Find user ID for username
+    String findUserIdForUsername(String username) {
+        return "";
+    }
 }
