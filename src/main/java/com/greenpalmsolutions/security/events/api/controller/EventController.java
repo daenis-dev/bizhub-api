@@ -47,8 +47,7 @@ public class EventController {
                 new FindEventDateTimesRequest().withUsername(username)));
     }
 
-    // TODO: test
-    @PutMapping("/v1/events")
+    @PutMapping("/v1/events/{id}")
     public ResponseEntity<EventDetails> updateEvent(
             @PathVariable("id") String id,
             @RequestParam("name") String name,
@@ -63,8 +62,7 @@ public class EventController {
                 .withEndDateTime(endDateTime)));
     }
 
-    // TODO: test
-    @DeleteMapping("/v1/events")
+    @DeleteMapping("/v1/events/{id}")
     public ResponseEntity<?> deleteEventForId(@PathVariable("id") String id) {
         deleteEvent.deleteEventForRequest(new DeleteEventRequest().withEventId(id));
         return ResponseEntity.ok().build();

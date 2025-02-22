@@ -3,7 +3,6 @@ package com.greenpalmsolutions.security.events.api.model;
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import lombok.Getter;
 
-// TODO: test
 @Getter
 public class DeleteEventRequest {
 

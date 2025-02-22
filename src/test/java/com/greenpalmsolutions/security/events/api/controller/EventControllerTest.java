@@ -101,4 +101,27 @@ class EventControllerTest {
                 .andExpect(jsonPath("$[0].endDateTime", is(eventDateTimeDetails.getEndDateTime()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")))));
     }
+
+    @Test
+    void updatesEvent() throws Exception {
+        EventDetails eventDetails = new EventDetails(
+                1, "Meeting", ZonedDateTime.now(), ZonedDateTime.now().plusHours(2));
+
+        when(updateEvent.updateEventForRequest(any())).thenReturn(eventDetails);
+
+        mockMvc.perform(put("/v1/events/1")
+                        .param("name", "Meeting One")
+                        .param("start-date-time",
+                                ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE.ISO_DATE_TIME))
+                        .param("end-date-time",
+                                ZonedDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE.ISO_DATE_TIME)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)));
+    }
+
+    @Test
+    void deletesEvent() throws Exception {
+        mockMvc.perform(delete("/v1/events/1"))
+                .andExpect(status().isOk());
+    }
 }
