@@ -41,7 +41,6 @@ class EventService implements CreateEvent, FindEvents, FindEventDateTimes, Updat
                 .stream().map(Event::getDetails).toList();
     }
 
-    // TODO: IT
     @Override
     public EventDetails updateEventForRequest(UpdateEventRequest request) {
         Event event = eventRepository.findById(request.getEventId()).orElseThrow(() -> new RuntimeException("Cannot find event to update for ID"));
@@ -49,7 +48,6 @@ class EventService implements CreateEvent, FindEvents, FindEventDateTimes, Updat
         return eventRepository.save(event).getDetails();
     }
 
-    // TODO: IT
     @Override
     public void deleteEventForRequest(DeleteEventRequest request) {
         eventRepository.deleteById(request.getEventId());

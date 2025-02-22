@@ -40,7 +40,11 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/backups").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/backups/**").hasRole(USER)
-                            // TODO: Add event API
+                            .requestMatchers(HttpMethod.POST, "/v1/events").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/events").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/event-date-times").hasRole(USER)
+                            .requestMatchers(HttpMethod.PUT, "/v1/events/**").hasRole(USER)
+                            .requestMatchers(HttpMethod.DELETE, "/v1/events/**").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {
@@ -49,6 +53,7 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/logout");
                             configurer.ignoringRequestMatchers("/v1/reset-password");
                             configurer.ignoringRequestMatchers("/v1/backups");
+                            configurer.ignoringRequestMatchers("/v1/events/**");
                 })
                 .oauth2ResourceServer(resourceServer -> {
                     resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter));
