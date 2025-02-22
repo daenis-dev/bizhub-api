@@ -2,6 +2,7 @@ package com.greenpalmsolutions.security.events.internal;
 
 import com.greenpalmsolutions.security.events.api.model.CreateEventRequest;
 import com.greenpalmsolutions.security.events.api.model.EventDetails;
+import com.greenpalmsolutions.security.events.api.model.UpdateEventRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -44,6 +45,15 @@ public class Event {
     Event fromRequestAndUserId(CreateEventRequest request, String userId) {
         this.name = request.getName();
         this.userId = userId;
+        this.startDateTime = request.getStartDateTime();
+        this.endDateTime = request.getEndDateTime();
+        this.createdDateTime = ZonedDateTime.now();
+        this.modifiedDateTime = ZonedDateTime.now();
+        return this;
+    }
+
+    Event fromUpdateRequest(UpdateEventRequest request) {
+        this.name = request.getName();
         this.startDateTime = request.getStartDateTime();
         this.endDateTime = request.getEndDateTime();
         this.createdDateTime = ZonedDateTime.now();

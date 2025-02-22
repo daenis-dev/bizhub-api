@@ -28,6 +28,6 @@ public class UserFriend {
     private String friendUserId;
 
     @ManyToOne
-    @JoinColumn(name = "user_friend_list_id", nullable = false)
+    @JoinColumn(name = "user_friend_list_id", insertable = false, updatable = false)
     private UserFriendList userFriendList;
 }

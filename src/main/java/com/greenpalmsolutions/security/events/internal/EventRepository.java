@@ -16,7 +16,7 @@ interface EventRepository extends JpaRepository<Event, Long> {
     @Query("""
     SELECT new com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails(e.startDateTime, e.endDateTime)
     FROM Event e
-    WHERE e.userId = :username
+    WHERE e.userId = :userId
     """)
-    List<EventDateTimeDetails> findScheduleForUser(@Param("username") String username);
+    List<EventDateTimeDetails> findScheduleForUser(@Param("userId") String userId);
 }

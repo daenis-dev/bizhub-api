@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/backups").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/backups/**").hasRole(USER)
+                            // TODO: Add event API
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {

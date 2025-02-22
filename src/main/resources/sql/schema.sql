@@ -20,12 +20,16 @@ CREATE TABLE user_friend_lists (
     created_date_time_in_utc TIMESTAMPTZ NOT NULL
 );
 
+INSERT INTO user_friend_lists (user_id, created_date_time_in_utc) VALUES ('456-def', NOW());
+
 CREATE TABLE user_friends (
     id INT NOT NULL DEFAULT nextval('user_friends_id_seq') PRIMARY KEY,
     user_friend_list_id INT NOT NULL,
     friend_user_id VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_friend_list_id) REFERENCES user_friend_lists (id)
 );
+
+INSERT INTO user_friends (user_friend_list_id, friend_user_id) VALUES (1, '123-abc');
 
 CREATE TABLE events (
 	id INT NOT NULL DEFAULT nextval('events_id_seq') PRIMARY KEY,
@@ -35,4 +39,16 @@ CREATE TABLE events (
     end_date_time_in_utc TIMESTAMPTZ NOT NULL,
     created_date_time_in_utc TIMESTAMPTZ NOT NULL,
     modified_date_time_in_utc TIMESTAMPTZ NOT NULL
+);
+
+INSERT INTO events (
+    name, user_id, start_date_time_in_utc, end_date_time_in_utc, created_date_time_in_utc, modified_date_time_in_utc)
+VALUES (
+    'Meeting One', '456-def', NOW() + INTERVAL '2 hours', NOW() + INTERVAL '3 hours', NOW(), NOW()
+);
+
+INSERT INTO events (
+    name, user_id, start_date_time_in_utc, end_date_time_in_utc, created_date_time_in_utc, modified_date_time_in_utc)
+VALUES (
+    'Meeting Two', '456-def', NOW() + INTERVAL '4 hours', NOW() + INTERVAL '5 hours', NOW(), NOW()
 );

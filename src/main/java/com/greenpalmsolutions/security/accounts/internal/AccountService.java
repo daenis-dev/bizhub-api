@@ -14,21 +14,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class AccountService implements Login, Register, ResetPassword, FindCurrentAccount, FindUserIdForUsername {
 
-    private final KeycloakConnection keycloakConnection;
+    private final AuthorizationServer authorizationServer;
 
     @Override
     public LoginResponse loginForRequest(LoginRequest request) {
-        return keycloakConnection.getAccessTokenFromTheAuthorizationServerForThe(request);
+        return authorizationServer.getAccessTokenFromTheAuthorizationServerForThe(request);
     }
 
     @Override
     public void registerAccountForRequest(RegistrationRequest request) {
-        keycloakConnection.sendARegistrationRequestToAuthorizationServerForThe(request);
+        authorizationServer.sendARegistrationRequestToAuthorizationServerForThe(request);
     }
 
     @Override
     public void sendEmailToResetPasswordForRequest(ResetPasswordRequest request) {
-        keycloakConnection.sendEmailToResetPasswordForRequest(request);
+        authorizationServer.sendEmailToResetPasswordForRequest(request);
     }
 
     @Override
@@ -44,6 +44,6 @@ class AccountService implements Login, Register, ResetPassword, FindCurrentAccou
 
     @Override
     public String findForUsername(String username) {
-        return keycloakConnection.findUserIdForUsername(username);
+        return authorizationServer.findUserIdForUsername(username);
     }
 }

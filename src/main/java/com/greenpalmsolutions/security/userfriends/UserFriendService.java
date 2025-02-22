@@ -5,7 +5,6 @@ import com.greenpalmsolutions.security.accounts.api.behavior.FindUserIdForUserna
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-// TODO: IT
 @Service
 @RequiredArgsConstructor
 class UserFriendService implements FindCurrentUserFriends {

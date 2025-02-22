@@ -5,11 +5,10 @@ import org.keycloak.admin.client.Keycloak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -20,10 +19,11 @@ import java.util.*;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+@Profile("!it")
 @Component
-class KeycloakConnection {
+class KeycloakAuthorizationServer implements AuthorizationServer {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(KeycloakConnection.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(KeycloakAuthorizationServer.class);
 
     @Value("${keycloak.base-url}")
     private String KEYCLOAK_BASE_URL;
@@ -63,11 +63,12 @@ class KeycloakConnection {
 
     private final KeycloakClientRoleFactory keycloakClientRoleFactory;
 
-    KeycloakConnection(KeycloakClientRoleFactory keycloakClientRoleFactory) {
+    KeycloakAuthorizationServer(KeycloakClientRoleFactory keycloakClientRoleFactory) {
         this.keycloakClientRoleFactory = keycloakClientRoleFactory;
     }
 
-    void sendARegistrationRequestToAuthorizationServerForThe(RegistrationRequest request) {
+    @Override
+    public void sendARegistrationRequestToAuthorizationServerForThe(RegistrationRequest request) {
         try {
             registeringTheUser(adminWebClient(), request);
         } catch (Exception ex) {
@@ -131,7 +132,8 @@ class KeycloakConnection {
         return userDetails;
     }
 
-    LoginResponse getAccessTokenFromTheAuthorizationServerForThe(LoginRequest request) {
+    @Override
+    public LoginResponse getAccessTokenFromTheAuthorizationServerForThe(LoginRequest request) {
         return theTokenFor(request).toLoginResponseFromJwtUri(KEYCLOAK_BIZHUB_JWT_URI);
     }
 
@@ -160,7 +162,8 @@ class KeycloakConnection {
                 .build();
     }
 
-    void sendEmailToResetPasswordForRequest(ResetPasswordRequest request) {
+    @Override
+    public void sendEmailToResetPasswordForRequest(ResetPasswordRequest request) {
         Keycloak keycloak = Keycloak.getInstance(KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_REALM, KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_ADMIN_CLIENT_NAME);
         String accessToken = KEYCLOAK_BIZHUB_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
 
@@ -199,7 +202,8 @@ class KeycloakConnection {
                 .block(Duration.ofSeconds(30));
     }
 
-    String findUserIdForUsername(String username) {
+    @Override
+    public String findUserIdForUsername(String username) {
         Keycloak keycloak = Keycloak.getInstance(KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_REALM, KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_ADMIN_CLIENT_NAME);
         String accessToken = KEYCLOAK_BIZHUB_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
 

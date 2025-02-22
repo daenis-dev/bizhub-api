@@ -1,20 +1,12 @@
 package com.greenpalmsolutions.security.events.api.controller;
 
-import com.greenpalmsolutions.security.events.api.behavior.CreateEvent;
-import com.greenpalmsolutions.security.events.api.behavior.FindEventDateTimes;
-import com.greenpalmsolutions.security.events.api.behavior.FindEvents;
-import com.greenpalmsolutions.security.events.api.model.CreateEventRequest;
-import com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails;
-import com.greenpalmsolutions.security.events.api.model.EventDetails;
-import com.greenpalmsolutions.security.events.api.model.FindEventDateTimesRequest;
+import com.greenpalmsolutions.security.events.api.behavior.*;
+import com.greenpalmsolutions.security.events.api.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -26,6 +18,8 @@ public class EventController {
     private final CreateEvent createEvent;
     private final FindEvents findEvents;
     private final FindEventDateTimes findEventDateTimes;
+    private final UpdateEvent updateEvent;
+    private final DeleteEvent deleteEvent;
 
     @PostMapping("/v1/events")
     public ResponseEntity<EventDetails> createEvent(
@@ -51,5 +45,28 @@ public class EventController {
     public ResponseEntity<List<EventDateTimeDetails>> findEventDateTimes(@RequestParam("username") String username) {
         return ResponseEntity.ok(findEventDateTimes.findScheduleForRequest(
                 new FindEventDateTimesRequest().withUsername(username)));
+    }
+
+    // TODO: test
+    @PutMapping("/v1/events")
+    public ResponseEntity<EventDetails> updateEvent(
+            @PathVariable("id") String id,
+            @RequestParam("name") String name,
+            @RequestParam("start-date-time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            ZonedDateTime startDateTime,
+            @RequestParam("end-date-time") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            ZonedDateTime endDateTime) {
+        return ResponseEntity.ok(updateEvent.updateEventForRequest(new UpdateEventRequest()
+                .withEventId(id)
+                .withName(name)
+                .withStartDateTime(startDateTime)
+                .withEndDateTime(endDateTime)));
+    }
+
+    // TODO: test
+    @DeleteMapping("/v1/events")
+    public ResponseEntity<?> deleteEventForId(@PathVariable("id") String id) {
+        deleteEvent.deleteEventForRequest(new DeleteEventRequest().withEventId(id));
+        return ResponseEntity.ok().build();
     }
 }

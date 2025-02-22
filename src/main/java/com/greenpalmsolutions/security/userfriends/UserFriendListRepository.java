@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 interface UserFriendListRepository extends JpaRepository<UserFriendList, Long> {
 
     @Query("""
-    SELECT CASE WHEN COUNT(uf) > 0 THEN true ELSE false END
-    FROM UserFriend uf
-    JOIN uf.userFriendList ufl
-    WHERE ufl.userId = :secondUserId
-    AND uf.friendUserId = :firstUserId
-    """)
-    boolean isUserFriend(
+        SELECT CASE WHEN COUNT(uf) = 0 THEN true ELSE false END
+        FROM UserFriend uf
+        JOIN uf.userFriendList ufl
+        WHERE ufl.userId = :secondUserId
+        AND uf.friendUserId = :firstUserId
+        """)
+    boolean userIdIsNotInFriendListForOtherUserId(
             @Param("firstUserId") String firstUserId,
             @Param("secondUserId") String secondUserId
     );

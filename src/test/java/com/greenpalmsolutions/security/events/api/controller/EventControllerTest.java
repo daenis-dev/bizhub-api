@@ -1,8 +1,6 @@
 package com.greenpalmsolutions.security.events.api.controller;
 
-import com.greenpalmsolutions.security.events.api.behavior.CreateEvent;
-import com.greenpalmsolutions.security.events.api.behavior.FindEventDateTimes;
-import com.greenpalmsolutions.security.events.api.behavior.FindEvents;
+import com.greenpalmsolutions.security.events.api.behavior.*;
 import com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails;
 import com.greenpalmsolutions.security.events.api.model.EventDetails;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,12 +34,18 @@ class EventControllerTest {
     @Mock
     private FindEventDateTimes findEventDateTimes;
 
+    @Mock
+    private UpdateEvent updateEvent;
+
+    @Mock
+    private DeleteEvent deleteEvent;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new EventController(createEvent, findEvents, findEventDateTimes))
+                .standaloneSetup(new EventController(createEvent, findEvents, findEventDateTimes, updateEvent, deleteEvent))
                 .build();
     }
 
