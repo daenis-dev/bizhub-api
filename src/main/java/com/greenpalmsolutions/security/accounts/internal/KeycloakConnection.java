@@ -199,8 +199,29 @@ class KeycloakConnection {
                 .block(Duration.ofSeconds(30));
     }
 
-    // TODO: Keycloak - Find user ID for username
     String findUserIdForUsername(String username) {
-        return "";
+        Keycloak keycloak = Keycloak.getInstance(KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_REALM, KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_ADMIN_CLIENT_NAME);
+        String accessToken = KEYCLOAK_BIZHUB_TOKEN_SCHEMA + " " + keycloak.tokenManager().getAccessTokenString();
+
+        WebClient webClient = WebClient
+                .builder()
+                .baseUrl(KEYCLOAK_BIZHUB_BASE_URL)
+                .defaultHeaders(httpHeaders -> {
+                    httpHeaders.add(HttpHeaders.ACCEPT, ALL_VALUE);
+                    httpHeaders.add(HttpHeaders.AUTHORIZATION, accessToken);
+                })
+                .build();
+
+        List<LinkedHashMap> keycloakUserDetails = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path("/users").queryParam("username", username).build())
+                .exchangeToMono(response -> response.bodyToMono(List.class))
+                .block(Duration.ofSeconds(30));
+
+        if (keycloakUserDetails == null || keycloakUserDetails.isEmpty()) {
+            throw new RuntimeException("Cannot retrieve user details because they do not exist");
+        }
+
+        return String.valueOf(keycloakUserDetails.get(0).get("id"));
     }
 }
