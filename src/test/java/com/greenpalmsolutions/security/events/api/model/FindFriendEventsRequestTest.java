@@ -7,20 +7,20 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FindEventDateTimesRequestTest {
+class FindFriendEventsRequestTest {
 
-    private FindEventDateTimesRequest findEventDateTimesRequest;
+    private FindFriendEventsRequest findFriendEventsRequest;
 
     @BeforeEach
     void init() {
-        findEventDateTimesRequest = new FindEventDateTimesRequest();
+        findFriendEventsRequest = new FindFriendEventsRequest();
     }
 
     @Test
     void setsUsernameForValidInput() {
         String theUsername = "jim.recard@mail.com";
 
-        FindEventDateTimesRequest theUpdatedRequest = findEventDateTimesRequest.withUsername(theUsername);
+        FindFriendEventsRequest theUpdatedRequest = findFriendEventsRequest.withUsername(theUsername);
 
         String theUsernameFromTheUpdatedRequest = theUpdatedRequest.getUsername();
         assertThat(theUsernameFromTheUpdatedRequest).isEqualTo(theUsername);
@@ -28,10 +28,10 @@ class FindEventDateTimesRequestTest {
 
     @Test
     void doesNotSetTheUsernameForNullInput() {
-        String thePredictedMessage = "Username is required to find event date times";
+        String thePredictedMessage = "Username is required to find friend events";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> findEventDateTimesRequest.withUsername(null));
+                () -> findFriendEventsRequest.withUsername(null));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
@@ -39,10 +39,10 @@ class FindEventDateTimesRequestTest {
 
     @Test
     void doesNotSetTheUsernameForEmptyInput() {
-        String thePredictedMessage = "Username is required to find event date times";
+        String thePredictedMessage = "Username is required to find friend events";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> findEventDateTimesRequest.withUsername(""));
+                () -> findFriendEventsRequest.withUsername(""));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);
@@ -50,10 +50,10 @@ class FindEventDateTimesRequestTest {
 
     @Test
     void doesNotSetTheUsernameForInvalidInput() {
-        String thePredictedMessage = "Username must be in a valid format to find event date times";
+        String thePredictedMessage = "Username must be in a valid format to find friend events";
 
         InvalidRequestException theException = assertThrows(InvalidRequestException.class,
-                () -> findEventDateTimesRequest.withUsername("jim.recard.mail.com"));
+                () -> findFriendEventsRequest.withUsername("jim.recard.mail.com"));
 
         String theMessageFromTheException = theException.getMessage();
         assertThat(theMessageFromTheException).isEqualTo(thePredictedMessage);

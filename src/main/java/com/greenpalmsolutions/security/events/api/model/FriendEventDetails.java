@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @AllArgsConstructor
-public class EventDateTimeDetails {
+public class FriendEventDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX", timezone = "UTC")
     private ZonedDateTime startDateTime;

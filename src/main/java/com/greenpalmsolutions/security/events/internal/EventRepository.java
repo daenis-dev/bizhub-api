@@ -1,6 +1,6 @@
 package com.greenpalmsolutions.security.events.internal;
 
-import com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails;
+import com.greenpalmsolutions.security.events.api.model.FriendEventDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,9 +14,9 @@ interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByUserId(String userId);
 
     @Query("""
-    SELECT new com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails(e.startDateTime, e.endDateTime)
+    SELECT new com.greenpalmsolutions.security.events.api.model.FriendEventDetails(e.startDateTime, e.endDateTime)
     FROM Event e
     WHERE e.userId = :userId
     """)
-    List<EventDateTimeDetails> findScheduleForUser(@Param("userId") String userId);
+    List<FriendEventDetails> findFriendEventsForUser(@Param("userId") String userId);
 }

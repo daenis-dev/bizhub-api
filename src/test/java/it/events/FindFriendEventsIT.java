@@ -1,8 +1,8 @@
 package it.events;
 
-import com.greenpalmsolutions.security.events.api.behavior.FindEventDateTimes;
-import com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails;
-import com.greenpalmsolutions.security.events.api.model.FindEventDateTimesRequest;
+import com.greenpalmsolutions.security.events.api.behavior.FindFriendEvents;
+import com.greenpalmsolutions.security.events.api.model.FriendEventDetails;
+import com.greenpalmsolutions.security.events.api.model.FindFriendEventsRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class FindEventDateTimesIT {
+public class FindFriendEventsIT {
 
     @Autowired
-    private FindEventDateTimes findEventDateTimes;
+    private FindFriendEvents findFriendEvents;
 
     @BeforeEach
     void init() {
@@ -39,11 +39,11 @@ public class FindEventDateTimesIT {
     }
 
     @Test
-    void findsTheEventDateTimesForTheUsername() {
-        List<EventDateTimeDetails> eventDateTimeDetails = findEventDateTimes.findScheduleForRequest(
-                new FindEventDateTimesRequest().withUsername("someone@mail.com"));
+    void findsTheFriendEventsForTheUsername() {
+        List<FriendEventDetails> friendEventDetails = findFriendEvents.findFriendEventsForRequest(
+                new FindFriendEventsRequest().withUsername("someone@mail.com"));
 
-        assertThat(eventDateTimeDetails.get(0).getStartDateTime()).isNotNull();
-        assertThat(eventDateTimeDetails.get(0).getEndDateTime()).isNotNull();
+        assertThat(friendEventDetails.get(0).getStartDateTime()).isNotNull();
+        assertThat(friendEventDetails.get(0).getEndDateTime()).isNotNull();
     }
 }

@@ -5,16 +5,16 @@ import com.greenpalmsolutions.security.core.inputvalidation.EmailAddressValidato
 import lombok.Getter;
 
 @Getter
-public class FindEventDateTimesRequest {
+public class FindFriendEventsRequest {
 
     private String username;
 
-    public FindEventDateTimesRequest withUsername(String username) {
+    public FindFriendEventsRequest withUsername(String username) {
         if (username == null || username.isEmpty()) {
-            throw new InvalidRequestException("Username is required to find event date times");
+            throw new InvalidRequestException("Username is required to find friend events");
         }
         if (new EmailAddressValidator().isNotValidFormat(username)) {
-            throw new InvalidRequestException("Username must be in a valid format to find event date times");
+            throw new InvalidRequestException("Username must be in a valid format to find friend events");
         }
         this.username = username;
         return this;

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-class EventService implements CreateEvent, FindEvents, FindEventDateTimes, UpdateEvent, DeleteEvent {
+class EventService implements CreateEvent, FindEvents, FindFriendEvents, UpdateEvent, DeleteEvent {
 
     private final FindCurrentUserFriends findCurrentUserFriends;
     private final EventRepository eventRepository;
@@ -28,11 +28,11 @@ class EventService implements CreateEvent, FindEvents, FindEventDateTimes, Updat
     }
 
     @Override
-    public List<EventDateTimeDetails> findScheduleForRequest(FindEventDateTimesRequest request) {
+    public List<FriendEventDetails> findFriendEventsForRequest(FindFriendEventsRequest request) {
         if (findCurrentUserFriends.doesNotHaveFriendWithUsername(request.getUsername())) {
             throw new InvalidRequestException("Cannot access event date times if the user is not a friend");
         }
-        return eventRepository.findScheduleForUser(findUserIdForUsername.findForUsername(request.getUsername()));
+        return eventRepository.findFriendEventsForUser(findUserIdForUsername.findForUsername(request.getUsername()));
     }
 
     @Override

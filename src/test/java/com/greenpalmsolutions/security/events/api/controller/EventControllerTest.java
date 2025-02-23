@@ -1,7 +1,7 @@
 package com.greenpalmsolutions.security.events.api.controller;
 
 import com.greenpalmsolutions.security.events.api.behavior.*;
-import com.greenpalmsolutions.security.events.api.model.EventDateTimeDetails;
+import com.greenpalmsolutions.security.events.api.model.FriendEventDetails;
 import com.greenpalmsolutions.security.events.api.model.EventDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class EventControllerTest {
     private FindEvents findEvents;
 
     @Mock
-    private FindEventDateTimes findEventDateTimes;
+    private FindFriendEvents findFriendEvents;
 
     @Mock
     private UpdateEvent updateEvent;
@@ -45,7 +45,7 @@ class EventControllerTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new EventController(createEvent, findEvents, findEventDateTimes, updateEvent, deleteEvent))
+                .standaloneSetup(new EventController(createEvent, findEvents, findFriendEvents, updateEvent, deleteEvent))
                 .build();
     }
 
@@ -84,21 +84,21 @@ class EventControllerTest {
     }
 
     @Test
-    void findsEventDateTimes() throws Exception {
+    void findsFriendEvents() throws Exception {
         ZonedDateTime nowUtc = ZonedDateTime.now(ZoneOffset.UTC);
-        EventDateTimeDetails eventDateTimeDetails = new EventDateTimeDetails(
+        FriendEventDetails friendEventDetails = new FriendEventDetails(
                 nowUtc,
                 nowUtc.plusHours(2));
 
-        when(findEventDateTimes.findScheduleForRequest(any())).thenReturn(
-                Collections.singletonList(eventDateTimeDetails));
+        when(findFriendEvents.findFriendEventsForRequest(any())).thenReturn(
+                Collections.singletonList(friendEventDetails));
 
         mockMvc.perform(get("/v1/event-date-times")
                         .param("username", "someone@mail.com"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].startDateTime", is(eventDateTimeDetails.getStartDateTime()
+                .andExpect(jsonPath("$[0].startDateTime", is(friendEventDetails.getStartDateTime()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")))))
-                .andExpect(jsonPath("$[0].endDateTime", is(eventDateTimeDetails.getEndDateTime()
+                .andExpect(jsonPath("$[0].endDateTime", is(friendEventDetails.getEndDateTime()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")))));
     }
 
