@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/logout");
                             configurer.ignoringRequestMatchers("/v1/reset-password");
                             configurer.ignoringRequestMatchers("/v1/backups");
+                            configurer.ignoringRequestMatchers("/v1/events");
                             configurer.ignoringRequestMatchers("/v1/events/**");
                 })
                 .oauth2ResourceServer(resourceServer -> {
