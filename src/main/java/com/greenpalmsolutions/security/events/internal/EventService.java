@@ -22,8 +22,13 @@ class EventService implements CreateEvent, FindEvents, FindFriendEvents, UpdateE
 
     @Override
     public EventDetails createEventForRequest(CreateEventRequest request) {
+        String currentUserId = findCurrentAccount.getUserIdForCurrentAccount();
+        if (eventRepository.eventExistsBetweenStartDateTimeAndEndDateTimeForUserId(
+                request.getStartDateTime(), request.getEndDateTime(), currentUserId)) {
+            throw new InvalidRequestException("An event is already scheduled within this timeframe");
+        }
         return eventRepository.save(new Event()
-                .fromRequestAndUserId(request, findCurrentAccount.getUserIdForCurrentAccount()))
+                .fromRequestAndUserId(request, currentUserId))
                 .getDetails();
     }
 
@@ -43,6 +48,13 @@ class EventService implements CreateEvent, FindEvents, FindFriendEvents, UpdateE
 
     @Override
     public EventDetails updateEventForRequest(UpdateEventRequest request) {
+        if (eventRepository.eventExistsBetweenStartDateTimeAndEndDateTimeForUserIdAndEventId(
+                request.getStartDateTime(),
+                request.getEndDateTime(),
+                findCurrentAccount.getUserIdForCurrentAccount(),
+                request.getEventId())) {
+            throw new InvalidRequestException("An event is already scheduled within this timeframe");
+        }
         Event event = eventRepository.findById(request.getEventId()).orElseThrow(() -> new RuntimeException("Cannot find event to update for ID"));
         event.fromUpdateRequest(request);
         return eventRepository.save(event).getDetails();

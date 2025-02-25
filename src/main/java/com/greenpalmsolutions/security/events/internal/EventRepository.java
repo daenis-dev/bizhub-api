@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Repository
@@ -19,4 +20,25 @@ interface EventRepository extends JpaRepository<Event, Long> {
     WHERE e.userId = :userId
     """)
     List<FriendEventDetails> findFriendEventsForUser(@Param("userId") String userId);
+
+    @Query("""
+        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime < :endDateTime AND e.endDateTime > :startDateTime))
+       """)
+    boolean eventExistsBetweenStartDateTimeAndEndDateTimeForUserId(
+            @Param("startDateTime") ZonedDateTime startDateTime,
+            @Param("endDateTime") ZonedDateTime endDateTime,
+            @Param("userId") String userId
+    );
+
+    @Query("""
+        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime < :endDateTime AND e.endDateTime > :startDateTime) AND e.id <> :eventId)
+    """)
+    boolean eventExistsBetweenStartDateTimeAndEndDateTimeForUserIdAndEventId(
+            @Param("startDateTime") ZonedDateTime startDateTime,
+            @Param("endDateTime") ZonedDateTime endDateTime,
+            @Param("userId") String userId,
+            @Param("eventId") long eventId
+    );
+
+
 }

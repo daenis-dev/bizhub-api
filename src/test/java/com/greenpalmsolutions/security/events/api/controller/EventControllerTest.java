@@ -93,7 +93,7 @@ class EventControllerTest {
         when(findFriendEvents.findFriendEventsForRequest(any())).thenReturn(
                 Collections.singletonList(friendEventDetails));
 
-        mockMvc.perform(get("/v1/event-date-times")
+        mockMvc.perform(get("/v1/friend-events")
                         .param("username", "someone@mail.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].startDateTime", is(friendEventDetails.getStartDateTime()
