@@ -24,6 +24,7 @@ import java.util.Collections;
 public class WebSecurityConfig {
 
     private final String USER = "user";
+    private final String DEMO_USER = "demo_user";
 
     private final JwtAuthConverter jwtAuthConverter;
 
@@ -36,12 +37,12 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
                             .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/reset-password").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/v1/logout").hasRole(USER)
+                            .requestMatchers(HttpMethod.POST, "/v1/logout").hasAnyRole(USER, DEMO_USER)
                             .requestMatchers(HttpMethod.POST, "/v1/backups").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/backups").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/backups/**").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/backups").hasAnyRole(USER, DEMO_USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/backups/**").hasAnyRole(USER, DEMO_USER)
                             .requestMatchers(HttpMethod.POST, "/v1/events").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/events").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/events").hasAnyRole(USER, DEMO_USER)
                             .requestMatchers(HttpMethod.GET, "/v1/event-date-times").hasRole(USER)
                             .requestMatchers(HttpMethod.PUT, "/v1/events/**").hasRole(USER)
                             .requestMatchers(HttpMethod.DELETE, "/v1/events/**").hasRole(USER)
