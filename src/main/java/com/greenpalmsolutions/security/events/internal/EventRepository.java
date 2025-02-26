@@ -22,7 +22,7 @@ interface EventRepository extends JpaRepository<Event, Long> {
     List<FriendEventDetails> findFriendEventsForUser(@Param("userId") String userId);
 
     @Query("""
-        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime < :endDateTime AND e.endDateTime > :startDateTime))
+        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime > :startDateTime AND e.endDateTime < :endDateTime))
        """)
     boolean eventExistsBetweenStartDateTimeAndEndDateTimeForUserId(
             @Param("startDateTime") ZonedDateTime startDateTime,
@@ -31,7 +31,7 @@ interface EventRepository extends JpaRepository<Event, Long> {
     );
 
     @Query("""
-        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime < :endDateTime AND e.endDateTime > :startDateTime) AND e.id <> :eventId)
+        SELECT COUNT(e) > 0 FROM Event e WHERE e.userId = :userId AND ((e.startDateTime > :startDateTime AND e.endDateTime < :endDateTime) AND e.id <> :eventId)
     """)
     boolean eventExistsBetweenStartDateTimeAndEndDateTimeForUserIdAndEventId(
             @Param("startDateTime") ZonedDateTime startDateTime,
