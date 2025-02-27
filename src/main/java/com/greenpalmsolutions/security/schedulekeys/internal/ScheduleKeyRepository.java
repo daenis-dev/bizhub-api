@@ -16,4 +16,7 @@ interface ScheduleKeyRepository extends JpaRepository<ScheduleKey, Long> {
 
     @Query("SELECT new com.greenpalmsolutions.security.schedulekeys.api.model.ScheduleKeyDetails(sk.id, sk.token) FROM ScheduleKey sk WHERE sk.userId = :userId AND sk.isActive = true")
     ScheduleKeyDetails findActiveScheduleKeyForUserId(@Param("userId") String userId);
+
+    @Query("SELECT COUNT(sk) > 0 FROM ScheduleKey sk WHERE sk.userId = :userId AND sk.token = :token AND sk.isActive = true")
+    boolean scheduleKeyIsValidForUserId(@Param("token") String token, @Param("userId") String userId);
 }

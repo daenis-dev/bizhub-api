@@ -33,6 +33,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
+                            .requestMatchers(HttpMethod.GET, "/v1/schedule").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
                             .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
@@ -46,6 +47,9 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/v1/event-date-times").hasRole(USER)
                             .requestMatchers(HttpMethod.PUT, "/v1/events/**").hasRole(USER)
                             .requestMatchers(HttpMethod.DELETE, "/v1/events/**").hasRole(USER)
+                            .requestMatchers(HttpMethod.POST, "/v1/schedule-keys").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/schedule-keys").hasRole(USER)
+                            .requestMatchers(HttpMethod.DELETE, "/v1/schedule-keys").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {
@@ -56,6 +60,7 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/backups");
                             configurer.ignoringRequestMatchers("/v1/events");
                             configurer.ignoringRequestMatchers("/v1/events/**");
+                            configurer.ignoringRequestMatchers("/v1/schedule-keys");
                 })
                 .oauth2ResourceServer(resourceServer -> {
                     resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter));

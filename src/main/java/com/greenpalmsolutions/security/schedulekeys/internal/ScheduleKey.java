@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-// TODO: test
 @Entity
 @Table(name = "schedule_keys")
 @Getter(value = AccessLevel.PACKAGE)

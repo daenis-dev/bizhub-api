@@ -41,3 +41,5 @@ CREATE TABLE schedule_keys (
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
     created_date_time_in_utc TIMESTAMPTZ NOT NULL
 );
+
+INSERT INTO schedule_keys (user_id, token, is_active, created_date_time_in_utc) VALUES ('456-def', 'xyz', true, NOW());

@@ -5,7 +5,7 @@ import com.greenpalmsolutions.security.accounts.api.behavior.FindUserIdForUserna
 import com.greenpalmsolutions.security.schedulekeys.api.behavior.CreateScheduleKey;
 import com.greenpalmsolutions.security.schedulekeys.api.behavior.DisableScheduleKey;
 import com.greenpalmsolutions.security.schedulekeys.api.behavior.FindScheduleKey;
-import com.greenpalmsolutions.security.schedulekeys.api.model.FindScheduleKeyRequest;
+import com.greenpalmsolutions.security.schedulekeys.api.behavior.ScheduleKeyIsValidForUser;
 import com.greenpalmsolutions.security.schedulekeys.api.model.ScheduleKeyDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,12 @@ import java.time.Instant;
 
 import java.util.random.RandomGenerator;
 
-// TODO: IT
 @Service
 @RequiredArgsConstructor
-class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableScheduleKey {
+class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableScheduleKey, ScheduleKeyIsValidForUser {
 
     private final ScheduleKeyRepository scheduleKeyRepository;
     private final FindCurrentAccount findCurrentAccount;
-    private final FindUserIdForUsername findUserIdForUsername;
 
     @Override
     public ScheduleKeyDetails createScheduleKeyForCurrentUser() {
@@ -44,13 +42,17 @@ class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableS
     }
 
     @Override
-    public ScheduleKeyDetails findScheduleKeyForRequest(FindScheduleKeyRequest request) {
-        return scheduleKeyRepository.findActiveScheduleKeyForUserId(
-                findUserIdForUsername.findForUsername(request.getUsername()));
+    public ScheduleKeyDetails findScheduleKeyForCurrentUser() {
+        return scheduleKeyRepository.findActiveScheduleKeyForUserId(findCurrentAccount.getUserIdForCurrentAccount());
     }
 
     @Override
     public void disableActiveScheduleKeyForUser() {
         scheduleKeyRepository.disableAllScheduleKeysForUser(findCurrentAccount.getUserIdForCurrentAccount());
+    }
+
+    @Override
+    public boolean scheduleKeyIsValidForUser(String scheduleKey, String userId) {
+        return scheduleKeyRepository.scheduleKeyIsValidForUserId(scheduleKey, userId);
     }
 }

@@ -5,6 +5,7 @@ import com.greenpalmsolutions.security.accounts.api.behavior.FindUserIdForUserna
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import com.greenpalmsolutions.security.events.api.behavior.*;
 import com.greenpalmsolutions.security.events.api.model.*;
+import com.greenpalmsolutions.security.schedulekeys.api.behavior.ScheduleKeyIsValidForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-class EventService implements CreateEvent, FindEvents, UpdateEvent, DeleteEvent {
+class EventService implements CreateEvent, FindEvents, UpdateEvent, DeleteEvent, FindSchedule {
 
     private final EventRepository eventRepository;
     private final FindCurrentAccount findCurrentAccount;
     private final FindUserIdForUsername findUserIdForUsername;
+    private final ScheduleKeyIsValidForUser scheduleKeyIsValidForUser;
 
     @Override
     public EventDetails createEventForRequest(CreateEventRequest request) {
@@ -45,7 +47,8 @@ class EventService implements CreateEvent, FindEvents, UpdateEvent, DeleteEvent 
                 request.getEventId())) {
             throw new InvalidRequestException("An event is already scheduled within this timeframe");
         }
-        Event event = eventRepository.findById(request.getEventId()).orElseThrow(() -> new RuntimeException("Cannot find event to update for ID"));
+        Event event = eventRepository.findById(request.getEventId()).orElseThrow(
+                () -> new RuntimeException("Cannot find event to update for ID"));
         event.fromUpdateRequest(request);
         return eventRepository.save(event).getDetails();
     }
@@ -53,5 +56,19 @@ class EventService implements CreateEvent, FindEvents, UpdateEvent, DeleteEvent 
     @Override
     public void deleteEventForRequest(DeleteEventRequest request) {
         eventRepository.deleteById(request.getEventId());
+    }
+
+    @Override
+    public ScheduleDetails findScheduleForRequest(FindScheduleRequest request) {
+        String scheduleUserId = findUserIdForUsername.findForUsername(request.getUsername());
+        if (scheduleKeyIsNotValidFor(request, scheduleUserId)) {
+            throw new InvalidRequestException("Schedule key is not valid for user");
+        }
+        return new ScheduleDetails(request.getUsername(), eventRepository.findEventDatesForUserId(scheduleUserId));
+    }
+
+    private boolean scheduleKeyIsNotValidFor(FindScheduleRequest request, String scheduleUserId) {
+        return !scheduleKeyIsValidForUser.scheduleKeyIsValidForUser(
+                request.getScheduleKey(), scheduleUserId);
     }
 }
