@@ -5,7 +5,6 @@ import com.greenpalmsolutions.security.accounts.api.behavior.FindUserIdForUserna
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
 import com.greenpalmsolutions.security.events.api.behavior.*;
 import com.greenpalmsolutions.security.events.api.model.*;
-import com.greenpalmsolutions.security.userfriends.FindCurrentUserFriends;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-class EventService implements CreateEvent, FindEvents, FindFriendEvents, UpdateEvent, DeleteEvent {
+class EventService implements CreateEvent, FindEvents, UpdateEvent, DeleteEvent {
 
-    private final FindCurrentUserFriends findCurrentUserFriends;
     private final EventRepository eventRepository;
     private final FindCurrentAccount findCurrentAccount;
     private final FindUserIdForUsername findUserIdForUsername;
@@ -30,14 +28,6 @@ class EventService implements CreateEvent, FindEvents, FindFriendEvents, UpdateE
         return eventRepository.save(new Event()
                 .fromRequestAndUserId(request, currentUserId))
                 .getDetails();
-    }
-
-    @Override
-    public List<FriendEventDetails> findFriendEventsForRequest(FindFriendEventsRequest request) {
-        if (findCurrentUserFriends.doesNotHaveFriendWithUsername(request.getUsername())) {
-            throw new InvalidRequestException("Cannot access event date times if the user is not a friend");
-        }
-        return eventRepository.findFriendEventsForUser(findUserIdForUsername.findForUsername(request.getUsername()));
     }
 
     @Override

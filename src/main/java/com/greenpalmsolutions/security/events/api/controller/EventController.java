@@ -17,7 +17,6 @@ public class EventController {
 
     private final CreateEvent createEvent;
     private final FindEvents findEvents;
-    private final FindFriendEvents findFriendEvents;
     private final UpdateEvent updateEvent;
     private final DeleteEvent deleteEvent;
 
@@ -39,12 +38,6 @@ public class EventController {
     @GetMapping("/v1/events")
     public ResponseEntity<List<EventDetails>> findEvents() {
         return ResponseEntity.ok(findEvents.findEventsForCurrentUser());
-    }
-
-    @GetMapping("/v1/friend-events")
-    public ResponseEntity<List<FriendEventDetails>> findFriendEvents(@RequestParam("username") String username) {
-        return ResponseEntity.ok(findFriendEvents.findFriendEventsForRequest(
-                new FindFriendEventsRequest().withUsername(username)));
     }
 
     @PutMapping("/v1/events/{id}")
