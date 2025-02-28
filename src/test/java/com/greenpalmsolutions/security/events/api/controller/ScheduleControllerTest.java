@@ -44,7 +44,7 @@ class ScheduleControllerTest {
 
         when(findSchedule.findScheduleForRequest(any())).thenReturn(scheduleDetails);
 
-        mockMvc.perform(get("/v1/schedule")
+        mockMvc.perform(get("/v1/schedules")
                         .param("username", "someone@mail.com")
                         .param("schedule-key", "xyzabc123"))
                 .andExpect(status().isOk())

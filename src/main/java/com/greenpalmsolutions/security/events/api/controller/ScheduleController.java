@@ -15,7 +15,7 @@ public class ScheduleController {
 
     private final FindSchedule findSchedule;
 
-    @GetMapping("/v1/schedule")
+    @GetMapping("/v1/schedules")
     public ResponseEntity<ScheduleDetails> findScheduleForUser(
             @RequestParam("username") String username, @RequestParam("schedule-key") String scheduleKey) {
         return ResponseEntity.ok(findSchedule.findScheduleForRequest(
