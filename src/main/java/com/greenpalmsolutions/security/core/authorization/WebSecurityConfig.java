@@ -33,7 +33,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
-                            .requestMatchers(HttpMethod.GET, "/v1/schedule").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/v1/schedules").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
                             .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
