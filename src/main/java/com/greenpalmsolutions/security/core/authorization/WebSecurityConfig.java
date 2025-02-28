@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/v1/events/**").hasRole(USER)
                             .requestMatchers(HttpMethod.DELETE, "/v1/events/**").hasRole(USER)
                             .requestMatchers(HttpMethod.POST, "/v1/schedule-keys").hasRole(USER)
-                            .requestMatchers(HttpMethod.GET, "/v1/schedule-keys").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/schedule-keys").hasAnyRole(USER, DEMO_USER)
                             .requestMatchers(HttpMethod.DELETE, "/v1/schedule-keys").hasRole(USER)
                             .anyRequest().authenticated();
                 })
