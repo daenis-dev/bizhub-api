@@ -7,6 +7,7 @@ import com.greenpalmsolutions.security.schedulekeys.api.behavior.DisableSchedule
 import com.greenpalmsolutions.security.schedulekeys.api.behavior.FindScheduleKey;
 import com.greenpalmsolutions.security.schedulekeys.api.behavior.ScheduleKeyIsValidForUser;
 import com.greenpalmsolutions.security.schedulekeys.api.model.ScheduleKeyDetails;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableS
     private final ScheduleKeyRepository scheduleKeyRepository;
     private final FindCurrentAccount findCurrentAccount;
 
+    @Transactional
     @Override
     public ScheduleKeyDetails createScheduleKeyForCurrentUser() {
         final String CURRENT_USER_ID = findCurrentAccount.getUserIdForCurrentAccount();
