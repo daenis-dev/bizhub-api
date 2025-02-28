@@ -48,6 +48,7 @@ class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableS
         return scheduleKeyRepository.findActiveScheduleKeyForUserId(findCurrentAccount.getUserIdForCurrentAccount());
     }
 
+    @Transactional
     @Override
     public void disableActiveScheduleKeyForUser() {
         scheduleKeyRepository.disableAllScheduleKeysForUser(findCurrentAccount.getUserIdForCurrentAccount());
