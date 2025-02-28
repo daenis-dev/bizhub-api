@@ -32,15 +32,8 @@ class ScheduleKeyService implements CreateScheduleKey, FindScheduleKey, DisableS
     }
 
     private String generateToken() {
-        final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 15; i++) {
-            int index = RandomGenerator.getDefault().nextInt(CHARACTERS.length());
-            sb.append(CHARACTERS.charAt(index));
-        }
         long timestamp = Instant.now().toEpochMilli();
-        return sb.append("_").append(timestamp).toString();
+        return "schedule_" + timestamp;
     }
 
     @Override
