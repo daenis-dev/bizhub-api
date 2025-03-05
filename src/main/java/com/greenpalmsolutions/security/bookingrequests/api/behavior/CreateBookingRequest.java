@@ -4,6 +4,6 @@ import com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestD
 
 public interface CreateBookingRequest {
 
-    BookingRequestDetails submitForRequest(
+    BookingRequestDetails createForRequest(
             com.greenpalmsolutions.security.bookingrequests.api.model.CreateBookingRequest request);
 }

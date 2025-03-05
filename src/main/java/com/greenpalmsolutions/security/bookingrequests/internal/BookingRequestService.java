@@ -24,7 +24,7 @@ class BookingRequestService implements CreateBookingRequest, FindMyPendingBookin
     private final FindCurrentAccount findCurrentAccount;
 
     @Override
-    public BookingRequestDetails submitForRequest(
+    public BookingRequestDetails createForRequest(
             com.greenpalmsolutions.security.bookingrequests.api.model.CreateBookingRequest request) {
         BookingRequest bookingRequest =
                 new BookingRequest();
