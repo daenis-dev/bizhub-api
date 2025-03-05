@@ -12,10 +12,11 @@ import java.util.List;
 interface BookingRequestRepository extends JpaRepository<BookingRequest, Long> {
 
     @Query("""
-    SELECT new com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestDetails(
-        br.id, br.requesterEmailAddress, br.requesteeEmailAddress, br.eventName, br.startDateTime, br.endDateTime)
-    FROM BookingRequest br
-    WHERE br.requesteeUserId = :requesteeUserId
+        SELECT new com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestDetails(
+            br.id, br.requesterEmailAddress, br.requesteeEmailAddress, br.eventName, br.startDateTime, br.endDateTime)
+        FROM BookingRequest br
+        WHERE br.requesteeUserId = :requesteeUserId
+        AND br.status.name = 'pending approval'
     """)
     List<BookingRequestDetails> findByRequesteeUserId(@Param("requesteeUserId") String requesteeUserId);
 }

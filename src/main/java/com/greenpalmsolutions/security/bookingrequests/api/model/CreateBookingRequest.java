@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 
 // TODO: test
 @Getter
-public class BookingRequest {
+public class CreateBookingRequest {
 
     private String requesterEmailAddress;
     private String requesteeEmailAddress;
@@ -16,7 +16,7 @@ public class BookingRequest {
     private ZonedDateTime startDateTime;
     private ZonedDateTime endDateTime;
 
-    public BookingRequest withRequesterEmailAddress(String requesterEmailAddress) {
+    public CreateBookingRequest withRequesterEmailAddress(String requesterEmailAddress) {
         if (requesterEmailAddress == null || requesterEmailAddress.isEmpty()) {
             throw new InvalidRequestException("Requester email address is required to create a booking request");
         }
@@ -27,7 +27,7 @@ public class BookingRequest {
         return this;
     }
 
-    public BookingRequest withRequesteeEmailAddress(String requesteeEmailAddress) {
+    public CreateBookingRequest withRequesteeEmailAddress(String requesteeEmailAddress) {
         if (requesteeEmailAddress == null || requesteeEmailAddress.isEmpty()) {
             throw new InvalidRequestException("Requestee email address is required to create a booking request");
         }
@@ -38,7 +38,7 @@ public class BookingRequest {
         return this;
     }
 
-    public BookingRequest withEventName(String eventName) {
+    public CreateBookingRequest withEventName(String eventName) {
         if (eventName == null || eventName.isEmpty()) {
             throw new InvalidRequestException("Event name is required to create a booking request");
         }
@@ -46,7 +46,7 @@ public class BookingRequest {
         return this;
     }
 
-    public BookingRequest withStartDateTime(ZonedDateTime startDateTime) {
+    public CreateBookingRequest withStartDateTime(ZonedDateTime startDateTime) {
         if (startDateTime == null) {
             throw new InvalidRequestException("Start date time is required to create a booking request");
         }
@@ -54,7 +54,7 @@ public class BookingRequest {
         return this;
     }
 
-    public BookingRequest withEndDateTime(ZonedDateTime endDateTime) {
+    public CreateBookingRequest withEndDateTime(ZonedDateTime endDateTime) {
         if (endDateTime == null) {
             throw new InvalidRequestException("End date time is required to create a booking request");
         }
