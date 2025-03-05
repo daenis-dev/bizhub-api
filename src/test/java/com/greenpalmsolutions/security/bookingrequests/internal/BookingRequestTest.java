@@ -89,4 +89,20 @@ class BookingRequestTest {
 
         assertThat(theHashCode).isEqualTo(-779166124);
     }
+
+    @Test
+    void getsTheStatusName() {
+        String theReturnedStatusName = bookingRequest.getStatusName();
+
+        assertThat(theReturnedStatusName).isEqualTo(bookingRequestStatusName);
+    }
+
+    @Test
+    void getsABlankStatusNameIfTheStatusIsMissing() {
+        bookingRequest.setStatus(null);
+
+        String theReturnedStatusName = bookingRequest.getStatusName();
+
+        assertThat(theReturnedStatusName).isEmpty();
+    }
 }

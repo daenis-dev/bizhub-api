@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-// TODO: test
 @Getter
 public class UpdateBookingRequest {
 

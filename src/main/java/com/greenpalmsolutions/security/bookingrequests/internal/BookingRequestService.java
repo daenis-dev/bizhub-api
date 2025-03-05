@@ -3,7 +3,7 @@ package com.greenpalmsolutions.security.bookingrequests.internal;
 import com.greenpalmsolutions.security.accounts.api.behavior.FindCurrentAccount;
 import com.greenpalmsolutions.security.accounts.api.behavior.FindUserIdForUsername;
 import com.greenpalmsolutions.security.bookingrequests.api.behavior.CreateBookingRequest;
-import com.greenpalmsolutions.security.bookingrequests.api.behavior.FindMyPendingBookingRequests;
+import com.greenpalmsolutions.security.bookingrequests.api.behavior.FindMyActiveBookingRequests;
 import com.greenpalmsolutions.security.bookingrequests.api.behavior.UpdateBookingRequest;
 import com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestDetails;
 import com.greenpalmsolutions.security.core.errorhandling.InvalidRequestException;
@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-// TODO: IT
 @Service
 @RequiredArgsConstructor
-class BookingRequestService implements CreateBookingRequest, FindMyPendingBookingRequests, UpdateBookingRequest {
+class BookingRequestService implements CreateBookingRequest, FindMyActiveBookingRequests, UpdateBookingRequest {
 
     private final FindUserIdForUsername findUserIdForUsername;
     private final BookingRequestRepository bookingRequestRepository;
@@ -44,6 +43,7 @@ class BookingRequestService implements CreateBookingRequest, FindMyPendingBookin
                 id,
                 request.getRequesterEmailAddress(),
                 request.getEventName(),
+                bookingRequest.getStatusName(),
                 request.getStartDateTime(),
                 request.getEndDateTime());
     }
@@ -53,16 +53,16 @@ class BookingRequestService implements CreateBookingRequest, FindMyPendingBookin
     }
 
     @Override
-    public List<BookingRequestDetails> findMyPendingBookingRequests() {
+    public List<BookingRequestDetails> findMyActiveBookingRequests() {
         return bookingRequestRepository.findByRequesteeUserId(findCurrentAccount.getUserIdForCurrentAccount());
     }
 
     @Override
     public BookingRequestDetails updateBookingForRequest(
             com.greenpalmsolutions.security.bookingrequests.api.model.UpdateBookingRequest request) {
-        BookingRequest bookingRequest =
-                bookingRequestRepository.findById(request.getBookingRequestId())
-                        .orElseThrow(() -> new InvalidRequestException("Booking request does not exist for ID"));
+        BookingRequest bookingRequest = bookingRequestRepository.findByIdAndRequesteeUserId(
+                request.getBookingRequestId(), findCurrentAccount.getUserIdForCurrentAccount())
+                .orElseThrow(() -> new InvalidRequestException("Booking request does not exist for ID or requestee ID"));
 
         bookingRequest.setStatus(bookingRequestStatusRepository.findByName(request.getStatusName())
                 .orElseThrow(() -> new InvalidRequestException("Booking request status does not exist for name")));
@@ -73,6 +73,7 @@ class BookingRequestService implements CreateBookingRequest, FindMyPendingBookin
                 bookingRequest.getId(),
                 bookingRequest.getRequesterEmailAddress(),
                 bookingRequest.getEventName(),
+                bookingRequest.getStatusName(),
                 bookingRequest.getStartDateTime(),
                 bookingRequest.getEndDateTime());
     }

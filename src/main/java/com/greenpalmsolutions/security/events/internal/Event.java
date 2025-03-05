@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-// TODO: test
 @Entity
 @Table(name = "events")
 @Getter(value = AccessLevel.PACKAGE)

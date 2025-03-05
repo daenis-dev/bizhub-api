@@ -8,7 +8,8 @@ CREATE TABLE backups (
     user_id VARCHAR(255) NOT NULL
 );
 
-INSERT INTO backups (file_path, uncompressed_file_size_in_bytes, file_extension, user_id) VALUES ('src/test/resources/storage/123-abc/test.zip', 22, 'txt', '123-abc');
+INSERT INTO backups (file_path, uncompressed_file_size_in_bytes, file_extension, user_id)
+    VALUES ('src/test/resources/storage/123-abc/test.zip', 22, 'txt', '123-abc');
 
 CREATE SEQUENCE IF NOT EXISTS events_id_seq;
 CREATE TABLE events (
@@ -69,3 +70,12 @@ CREATE TABLE booking_requests (
     modified_date_time_in_utc TIMESTAMPTZ NOT NULL,
     FOREIGN KEY (status_id) REFERENCES booking_request_statuses (id)
 );
+
+INSERT INTO booking_requests (requestee_user_id, requester_email_address, status_id, start_date_time_in_utc,
+    end_date_time_in_utc, event_name, created_date_time_in_utc, modified_date_time_in_utc)
+    VALUES ('456-def', 'someone@mail.com',
+        (SELECT id FROM booking_request_statuses WHERE booking_request_statuses.name = 'pending approval'),
+        NOW(),
+        NOW(),
+        'Demo Meeting',
+        NOW(), NOW());

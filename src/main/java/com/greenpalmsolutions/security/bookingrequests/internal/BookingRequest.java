@@ -45,4 +45,8 @@ public class BookingRequest {
 
     @Column(name = "modified_date_time_in_utc")
     private ZonedDateTime modifiedDateTime;
+
+    public String getStatusName() {
+        return status != null ? status.getName() : "";
+    }
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
-// TODO: test
 @Getter
 public class CreateBookingRequest {
 

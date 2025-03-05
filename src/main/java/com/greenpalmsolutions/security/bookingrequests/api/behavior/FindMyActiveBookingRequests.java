@@ -4,7 +4,7 @@ import com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestD
 
 import java.util.List;
 
-public interface FindMyPendingBookingRequests {
+public interface FindMyActiveBookingRequests {
 
-    List<BookingRequestDetails> findMyPendingBookingRequests();
+    List<BookingRequestDetails> findMyActiveBookingRequests();
 }

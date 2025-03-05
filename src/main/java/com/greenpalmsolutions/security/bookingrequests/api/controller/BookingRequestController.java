@@ -1,7 +1,7 @@
-package com.greenpalmsolutions.security.bookingrequests.api;
+package com.greenpalmsolutions.security.bookingrequests.api.controller;
 
 import com.greenpalmsolutions.security.bookingrequests.api.behavior.CreateBookingRequest;
-import com.greenpalmsolutions.security.bookingrequests.api.behavior.FindMyPendingBookingRequests;
+import com.greenpalmsolutions.security.bookingrequests.api.behavior.FindMyActiveBookingRequests;
 import com.greenpalmsolutions.security.bookingrequests.api.behavior.UpdateBookingRequest;
 import com.greenpalmsolutions.security.bookingrequests.api.model.BookingRequestDetails;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-// TODO: test
 @RestController
 @RequiredArgsConstructor
 public class BookingRequestController {
 
     private final CreateBookingRequest createBookingRequest;
-    private final FindMyPendingBookingRequests findMyPendingBookingRequests;
+    private final FindMyActiveBookingRequests findMyActiveBookingRequests;
     private final UpdateBookingRequest updateBookingRequest;
 
     @PostMapping("/v1/booking-requests")
@@ -42,8 +41,8 @@ public class BookingRequestController {
     }
 
     @GetMapping("/v1/booking-requests")
-    public ResponseEntity<List<BookingRequestDetails>> findAllOfMyPendingBookingRequests() {
-        return ResponseEntity.ok(findMyPendingBookingRequests.findMyPendingBookingRequests());
+    public ResponseEntity<List<BookingRequestDetails>> findAllOfMyActiveBookingRequests() {
+        return ResponseEntity.ok(findMyActiveBookingRequests.findMyActiveBookingRequests());
     }
 
     @PutMapping("/v1/booking-requests/{id}")

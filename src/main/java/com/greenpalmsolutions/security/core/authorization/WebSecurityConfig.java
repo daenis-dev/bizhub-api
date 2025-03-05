@@ -33,6 +33,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
+                            .requestMatchers(HttpMethod.POST, "/v1/booking-requests").permitAll()
                             .requestMatchers(HttpMethod.GET, "/v1/schedules").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/v1/login").permitAll()
@@ -50,6 +51,8 @@ public class WebSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/v1/schedule-keys").hasRole(USER)
                             .requestMatchers(HttpMethod.GET, "/v1/schedule-keys").hasAnyRole(USER, DEMO_USER)
                             .requestMatchers(HttpMethod.DELETE, "/v1/schedule-keys").hasRole(USER)
+                            .requestMatchers(HttpMethod.GET, "/v1/booking-requests").hasAnyRole(USER, DEMO_USER)
+                            .requestMatchers(HttpMethod.PUT, "/v1/booking-requests").hasRole(USER)
                             .anyRequest().authenticated();
                 })
                 .csrf(configurer -> {
