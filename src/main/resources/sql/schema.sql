@@ -48,8 +48,7 @@ CREATE SEQUENCE IF NOT EXISTS booking_request_statuses_id_seq;
 CREATE TABLE booking_request_statuses (
     id INT NOT NULL DEFAULT nextval('booking_request_statuses_id_seq') PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    request_is_pending_approval BOOLEAN NOT NULL DEFAULT TRUE,
-    request_is_active BOOLEAN NOT NULL DEFAULT FALSE
+    request_is_pending_approval BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 INSERT INTO booking_request_statuses (name, request_is_pending_approval) VALUES ('pending approval', TRUE);
