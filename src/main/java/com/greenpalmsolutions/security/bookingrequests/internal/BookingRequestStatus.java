@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: test
 @Entity
 @Table(name = "booking_request_statuses")
 @Getter(value = AccessLevel.PACKAGE)

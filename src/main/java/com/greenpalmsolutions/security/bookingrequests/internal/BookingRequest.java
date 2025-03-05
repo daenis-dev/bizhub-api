@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-// TODO: test
 @Entity
 @Table(name = "booking_requests")
 @Getter(value = AccessLevel.PACKAGE)
