@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                             configurer.ignoringRequestMatchers("/v1/events");
                             configurer.ignoringRequestMatchers("/v1/events/**");
                             configurer.ignoringRequestMatchers("/v1/schedule-keys");
+                            configurer.ignoringRequestMatchers("/v1/booking-requests");
                 })
                 .oauth2ResourceServer(resourceServer -> {
                     resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter));
